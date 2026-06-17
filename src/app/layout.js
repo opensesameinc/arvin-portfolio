@@ -1,4 +1,11 @@
 import "./globals.css";
+import { Space_Mono } from "next/font/google";
+
+const spaceMono = Space_Mono({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  variable: "--font-space-mono",
+});
 
 export const metadata = {
   title: "Arvin Poole | Growth Marketing Architect",
@@ -21,7 +28,7 @@ export default function RootLayout({ children }) {
           }}
         />
       </head>
-      <body className="bg-zinc-950 text-zinc-300 font-sans antialiased">
+      <body className={`${spaceMono.variable} bg-zinc-950 text-zinc-300 font-sans antialiased`}>
         <noscript>
           <iframe
             src="https://www.googletagmanager.com/ns.html?id=GTM-MPF8P92"
