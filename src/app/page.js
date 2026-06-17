@@ -272,7 +272,7 @@ export default function Home() {
 
               <h1 className="text-4xl md:text-5xl font-bold text-white mb-3 leading-[1.15]" style={{ fontFamily: 'var(--font-space-mono)', letterSpacing: '-0.02em' }}>
                 Arvin Poole
-                <span className="block text-emerald-400">Growth Marketing &</span>
+                <span className="block text-emerald-400">Enterprise Revenue &</span>
                 <span className="block">MarTech Architect</span>
               </h1>
 
