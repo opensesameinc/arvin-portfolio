@@ -1,5 +1,7 @@
 'use client'
 
+import { useEffect, useRef } from 'react'
+import Image from 'next/image'
 import {
   ArrowUpRight,
   MapPin,
@@ -10,7 +12,14 @@ import {
   ChevronRight,
   Link2,
   FileText,
+  Briefcase,
+  Mail,
 } from 'lucide-react'
+
+const glassPill = {
+  background: 'linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.03))',
+  boxShadow: '0 2px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.15)',
+}
 
 const glassCard = {
   background: 'linear-gradient(145deg, rgba(255,255,255,0.11) 0%, rgba(255,255,255,0.03) 50%, rgba(255,255,255,0.07) 100%)',
@@ -19,34 +28,151 @@ const glassCard = {
   WebkitBackdropFilter: 'blur(24px)',
 }
 
-const glassPill = {
-  background: 'linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.03))',
-  boxShadow: '0 2px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.15)',
+const NAV_BLOCKS = [
+  {
+    href: '/case-studies',
+    icon: BarChart2,
+    color: 'emerald',
+    title: 'Case Studies',
+    desc: 'CRM orchestration, paid media architecture, and live pipeline builds.',
+    iconStyle: {
+      background: 'linear-gradient(135deg, rgba(52,211,153,0.3) 0%, rgba(16,185,129,0.1) 100%)',
+      boxShadow: '0 4px 14px rgba(52,211,153,0.2), inset 0 1px 0 rgba(255,255,255,0.2)',
+    },
+    borderColor: 'rgba(52,211,153,0.25)',
+    iconClass: 'text-emerald-400',
+  },
+  {
+    href: '/career',
+    icon: Briefcase,
+    color: 'blue',
+    title: 'Career',
+    desc: '15+ years across B2B SaaS, high-CAC verticals, and growth leadership.',
+    iconStyle: {
+      background: 'linear-gradient(135deg, rgba(96,165,250,0.3) 0%, rgba(59,130,246,0.1) 100%)',
+      boxShadow: '0 4px 14px rgba(96,165,250,0.2), inset 0 1px 0 rgba(255,255,255,0.2)',
+    },
+    borderColor: 'rgba(96,165,250,0.25)',
+    iconClass: 'text-blue-400',
+  },
+  {
+    href: '/build-and-launch-your-site',
+    icon: BookOpen,
+    color: 'violet',
+    title: 'Build & Launch Guide',
+    desc: 'Step-by-step: build and deploy your own site with AI. No code needed.',
+    iconStyle: {
+      background: 'linear-gradient(135deg, rgba(167,139,250,0.3) 0%, rgba(139,92,246,0.1) 100%)',
+      boxShadow: '0 4px 14px rgba(167,139,250,0.2), inset 0 1px 0 rgba(255,255,255,0.2)',
+    },
+    borderColor: 'rgba(167,139,250,0.25)',
+    iconClass: 'text-violet-400',
+  },
+  {
+    href: '/contact',
+    icon: Mail,
+    color: 'orange',
+    title: 'Contact',
+    desc: 'Open to Marketing Director and Head of Growth opportunities.',
+    iconStyle: {
+      background: 'linear-gradient(135deg, rgba(251,146,60,0.3) 0%, rgba(249,115,22,0.1) 100%)',
+      boxShadow: '0 4px 14px rgba(251,146,60,0.2), inset 0 1px 0 rgba(255,255,255,0.2)',
+    },
+    borderColor: 'rgba(251,146,60,0.25)',
+    iconClass: 'text-orange-400',
+  },
+]
+
+function useMouse() {
+  const mouse = useRef({ x: 0.5, y: 0.5 })
+  const target = useRef({ x: 0.5, y: 0.5 })
+  const raf = useRef(null)
+
+  useEffect(() => {
+    const onMove = (e) => {
+      target.current.x = e.clientX / window.innerWidth
+      target.current.y = e.clientY / window.innerHeight
+    }
+    window.addEventListener('mousemove', onMove)
+
+    const tick = () => {
+      mouse.current.x += (target.current.x - mouse.current.x) * 0.06
+      mouse.current.y += (target.current.y - mouse.current.y) * 0.06
+      raf.current = requestAnimationFrame(tick)
+    }
+    raf.current = requestAnimationFrame(tick)
+
+    return () => {
+      window.removeEventListener('mousemove', onMove)
+      cancelAnimationFrame(raf.current)
+    }
+  }, [])
+
+  return mouse
 }
 
-const iconBadge = {
-  emerald: {
-    background: 'linear-gradient(135deg, rgba(52,211,153,0.3) 0%, rgba(16,185,129,0.1) 100%)',
-    boxShadow: '0 4px 14px rgba(52,211,153,0.2), inset 0 1px 0 rgba(255,255,255,0.2)',
-  },
-  blue: {
-    background: 'linear-gradient(135deg, rgba(96,165,250,0.3) 0%, rgba(59,130,246,0.1) 100%)',
-    boxShadow: '0 4px 14px rgba(96,165,250,0.2), inset 0 1px 0 rgba(255,255,255,0.2)',
-  },
-  orange: {
-    background: 'linear-gradient(135deg, rgba(251,146,60,0.3) 0%, rgba(249,115,22,0.1) 100%)',
-    boxShadow: '0 4px 14px rgba(251,146,60,0.2), inset 0 1px 0 rgba(255,255,255,0.2)',
-  },
-}
+function TiltCard({ children, className, style, href }) {
+  const ref = useRef(null)
 
-const CardShine = () => (
-  <div
-    className="absolute inset-0 rounded-3xl pointer-events-none"
-    style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.07) 0%, transparent 38%)' }}
-  />
-)
+  const onMove = (e) => {
+    const el = ref.current
+    if (!el) return
+    const rect = el.getBoundingClientRect()
+    const x = (e.clientX - rect.left) / rect.width - 0.5
+    const y = (e.clientY - rect.top) / rect.height - 0.5
+    el.style.transform = `perspective(800px) rotateX(${-y * 8}deg) rotateY(${x * 8}deg) scale(1.02)`
+  }
+
+  const onLeave = (e) => {
+    const el = ref.current
+    if (!el) return
+    el.style.transform = 'perspective(800px) rotateX(0deg) rotateY(0deg) scale(1)'
+  }
+
+  const Tag = href ? 'a' : 'div'
+  const props = href ? { href } : {}
+
+  return (
+    <Tag
+      ref={ref}
+      {...props}
+      className={className}
+      style={{ ...style, transition: 'transform 0.15s ease, box-shadow 0.15s ease', willChange: 'transform' }}
+      onMouseMove={onMove}
+      onMouseLeave={onLeave}
+    >
+      {children}
+    </Tag>
+  )
+}
 
 export default function Home() {
+  const mouse = useMouse()
+  const orb1Ref = useRef(null)
+  const orb2Ref = useRef(null)
+  const photoRef = useRef(null)
+  const rafId = useRef(null)
+
+  useEffect(() => {
+    const animate = () => {
+      const mx = mouse.current.x
+      const my = mouse.current.y
+
+      if (orb1Ref.current) {
+        orb1Ref.current.style.transform = `translate(${(mx - 0.5) * -60}px, ${(my - 0.5) * -40}px)`
+      }
+      if (orb2Ref.current) {
+        orb2Ref.current.style.transform = `translate(${(mx - 0.5) * 50}px, ${(my - 0.5) * 35}px)`
+      }
+      if (photoRef.current) {
+        photoRef.current.style.transform = `translate(${(mx - 0.5) * -12}px, ${(my - 0.5) * -8}px)`
+      }
+
+      rafId.current = requestAnimationFrame(animate)
+    }
+    rafId.current = requestAnimationFrame(animate)
+    return () => cancelAnimationFrame(rafId.current)
+  }, [])
 
   const trackEvent = (eventName, data = {}) => {
     if (typeof window !== 'undefined' && window.dataLayer) {
@@ -57,15 +183,25 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-zinc-950 relative overflow-hidden">
 
-      {/* Background glow */}
+      {/* Background orbs — parallax with mouse */}
       <div className="pointer-events-none fixed inset-0 z-0">
         <div
-          className="absolute top-[-20%] left-[10%] w-[700px] h-[700px] rounded-full"
-          style={{ background: 'radial-gradient(circle, rgba(52,211,153,0.14) 0%, transparent 70%)', filter: 'blur(80px)' }}
+          ref={orb1Ref}
+          className="absolute top-[-15%] left-[5%] w-[700px] h-[700px] rounded-full"
+          style={{
+            background: 'radial-gradient(circle, rgba(52,211,153,0.14) 0%, transparent 70%)',
+            filter: 'blur(80px)',
+            transition: 'transform 0.1s linear',
+          }}
         />
         <div
-          className="absolute bottom-[-10%] right-[5%] w-[600px] h-[600px] rounded-full"
-          style={{ background: 'radial-gradient(circle, rgba(59,130,246,0.1) 0%, transparent 70%)', filter: 'blur(80px)' }}
+          ref={orb2Ref}
+          className="absolute bottom-[-10%] right-[0%] w-[600px] h-[600px] rounded-full"
+          style={{
+            background: 'radial-gradient(circle, rgba(59,130,246,0.1) 0%, transparent 70%)',
+            filter: 'blur(80px)',
+            transition: 'transform 0.1s linear',
+          }}
         />
       </div>
 
@@ -73,29 +209,55 @@ export default function Home() {
 
         {/* Hero */}
         <section className="mb-20">
+          <div className="flex flex-col md:flex-row md:items-center gap-10 mb-12">
 
-          {/* Location pill */}
-          <div
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-zinc-300 text-sm mb-8 border border-white/[0.15]"
-            style={glassPill}
-          >
-            <MapPin size={13} className="text-emerald-400" />
-            Austin, TX · Open to Marketing Director & Head of Growth
+            {/* Photo */}
+            <div ref={photoRef} className="shrink-0 self-start md:self-center" style={{ willChange: 'transform', transition: 'transform 0.1s linear' }}>
+              <div
+                className="relative w-32 h-32 md:w-40 md:h-40 rounded-full"
+                style={{
+                  boxShadow: '0 0 0 1px rgba(255,255,255,0.15), 0 0 0 4px rgba(52,211,153,0.12), 0 20px 60px rgba(0,0,0,0.6)',
+                }}
+              >
+                <div
+                  className="absolute inset-0 rounded-full z-10 pointer-events-none"
+                  style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.08) 0%, transparent 50%)', borderRadius: '50%' }}
+                />
+                <Image
+                  src="/arvin.jpg"
+                  alt="Arvin Poole"
+                  fill
+                  className="rounded-full object-cover object-top grayscale"
+                  priority
+                />
+              </div>
+            </div>
+
+            {/* Text */}
+            <div>
+              <div
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-zinc-300 text-sm mb-5 border border-white/[0.15]"
+                style={glassPill}
+              >
+                <MapPin size={13} className="text-emerald-400" />
+                Austin, TX · Open to Marketing Director & Head of Growth
+              </div>
+
+              <h1 className="text-4xl md:text-5xl font-bold text-white mb-3 tracking-tight leading-[1.1]">
+                Arvin Poole
+                <span className="block text-emerald-400">Growth Marketing &</span>
+                <span className="block">MarTech Architect</span>
+              </h1>
+
+              <p className="text-base text-zinc-400 leading-relaxed max-w-xl">
+                I build data-driven acquisition engines, orchestrate complex CRM infrastructures,
+                and drive measurable pipeline growth for B2B SaaS and high-CAC industries.
+              </p>
+            </div>
           </div>
 
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 tracking-tight leading-[1.1]">
-            Arvin Poole
-            <span className="block text-emerald-400">Growth Marketing &</span>
-            <span className="block">MarTech Architect</span>
-          </h1>
-
-          <p className="text-xl text-zinc-400 mb-8 leading-relaxed max-w-2xl">
-            I build data-driven acquisition engines, orchestrate complex CRM infrastructures,
-            and drive measurable pipeline growth for B2B SaaS and high-CAC industries.
-          </p>
-
           {/* Stat pills */}
-          <div className="flex flex-wrap gap-3 mb-10">
+          <div className="flex flex-wrap gap-3 mb-8">
             {[
               { label: '15+ years', sub: 'experience' },
               { label: 'B2B SaaS', sub: 'focus' },
@@ -142,206 +304,48 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Case Studies */}
-        <section className="space-y-5 mb-8">
-          <div className="flex items-center gap-2 mb-8">
-            <BarChart2 size={16} className="text-emerald-400" />
-            <span className="text-zinc-500 text-sm font-medium uppercase tracking-widest">Case Studies</span>
+        {/* Navigation hub */}
+        <section>
+          <div className="flex items-center gap-2 mb-6">
+            <div className="h-px flex-1" style={{ background: 'linear-gradient(90deg, rgba(255,255,255,0.08), transparent)' }} />
+            <span className="text-zinc-600 text-xs font-medium uppercase tracking-widest">Explore</span>
+            <div className="h-px flex-1" style={{ background: 'linear-gradient(270deg, rgba(255,255,255,0.08), transparent)' }} />
           </div>
 
-          {/* Case Study 1 */}
-          <article
-            className="group rounded-3xl p-8 relative overflow-hidden border border-white/[0.12] hover:scale-[1.005] hover:border-white/[0.18] transition-all duration-300"
-            style={glassCard}
-          >
-            <CardShine />
-            <div className="flex items-start gap-4 mb-6">
-              <div
-                className="shrink-0 w-10 h-10 rounded-2xl flex items-center justify-center border border-emerald-500/25"
-                style={iconBadge.emerald}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {NAV_BLOCKS.map(({ href, icon: Icon, title, desc, iconStyle, borderColor, iconClass }) => (
+              <TiltCard
+                key={href}
+                href={href}
+                className="group block rounded-3xl p-6 relative overflow-hidden border border-white/[0.12] no-underline"
+                style={glassCard}
               >
-                <BarChart2 size={18} className="text-emerald-400" />
-              </div>
-              <div>
-                <h2 className="text-xl font-bold text-white">Lead Scoring & CRM Orchestration</h2>
-                <p className="text-zinc-500 text-sm mt-0.5">HubSpot · Salesforce · B2B SaaS</p>
-              </div>
-            </div>
-
-            <div className="space-y-5">
-              {[
-                {
-                  label: 'The Challenge',
-                  text: 'Silktide was transitioning from a sales-led, outbound-heavy motion to an inbound marketing engine. They needed a measurable qualification model that bridged marketing and sales, but the existing CRM architecture lacked the governance to support it.',
-                },
-                {
-                  label: 'The Execution',
-                  text: 'Instead of just assigning points to pageviews, I built the foundational CRM architecture first. I established strict lifecycle ownership rules where HubSpot owned scoring and the early lifecycle, while Salesforce owned SQLs and downstream stages. I designed and operationalized a 100-point B2B lead scoring model split between firmographic fit (40 points) and behavioral intent (60 points), then built a 36-task, seven-phase build plan for RevOps.',
-                },
-                {
-                  label: 'The Empirical Pivot',
-                  text: 'I pulled and analyzed 12 months of historical demo-requester data. The analysis revealed that 94% of conversions were single-touch events. I killed the planned multi-touch bonus weighting and adjusted thresholds to match where converters actually lived.',
-                },
-                {
-                  label: 'The Result',
-                  text: 'A fully operational, data-backed scoring engine that aligned marketing and sales around a single source of truth, eliminating disqualification noise and accelerating speed-to-lead for high-intent buyers.',
-                },
-              ].map(({ label, text }) => (
-                <div key={label}>
-                  <p className="text-emerald-400 text-sm font-semibold mb-1">{label}</p>
-                  <p className="text-zinc-400 text-sm leading-relaxed">{text}</p>
-                </div>
-              ))}
-            </div>
-          </article>
-
-          {/* Case Study 2 */}
-          <article
-            className="group rounded-3xl p-8 relative overflow-hidden border border-white/[0.12] hover:scale-[1.005] hover:border-white/[0.18] transition-all duration-300"
-            style={glassCard}
-          >
-            <CardShine />
-            <div className="flex items-start gap-4 mb-6">
-              <div
-                className="shrink-0 w-10 h-10 rounded-2xl flex items-center justify-center border border-blue-500/25"
-                style={iconBadge.blue}
-              >
-                <Megaphone size={18} className="text-blue-400" />
-              </div>
-              <div>
-                <h2 className="text-xl font-bold text-white">Paid Media Architecture & Regulatory Agility</h2>
-                <p className="text-zinc-500 text-sm mt-0.5">LinkedIn Ads · Higher Education · ADA Compliance</p>
-              </div>
-            </div>
-
-            <div className="space-y-5">
-              {[
-                {
-                  label: 'The Challenge',
-                  text: 'A previous $1,220 LinkedIn campaign died in an algorithmic death spiral — conversion objective without enough volume to optimize. The business needed a functional acquisition engine for the U.S. Higher Education vertical using a public accessibility index of 945 universities.',
-                },
-                {
-                  label: 'The Execution',
-                  text: 'I designed a 10-day, $1,800 validation campaign targeting digital and accessibility leaders, switching the objective to Website Visits to prevent algorithmic throttling. I engineered the full measurement architecture: Insight Tag coverage, Conversions API deduplication, and precise UTM structures. I also wrote the creative briefs balancing an anti-corporate visual identity with authoritative framing for public-sector buyers.',
-                },
-                {
-                  label: 'The Regulatory Pivot',
-                  text: 'Mid-build, the DOJ issued an Interim Final Rule extending the ADA Title II deadline. I executed a surgical copy pivot — shifting from compliance fear to deadline-aware angles like "The DOJ delayed it. The lawsuits did not." Audience, budget, and tracking remained untouched.',
-                },
-                {
-                  label: 'The Result',
-                  text: 'A technically sound validation engine that tested the riskiest assumption (CTR on the Index hook) at low cost, protecting the team from wasting hours on a heavy 25-ad-set ABM build before the core message was proven.',
-                },
-              ].map(({ label, text }) => (
-                <div key={label}>
-                  <p className="text-emerald-400 text-sm font-semibold mb-1">{label}</p>
-                  <p className="text-zinc-400 text-sm leading-relaxed">{text}</p>
-                </div>
-              ))}
-            </div>
-          </article>
-
-          {/* Case Study 3 */}
-          <article
-            className="group rounded-3xl p-8 relative overflow-hidden border border-white/[0.12] hover:scale-[1.005] hover:border-white/[0.18] transition-all duration-300"
-            style={glassCard}
-          >
-            <CardShine />
-            <div className="flex items-start gap-4 mb-6">
-              <div
-                className="shrink-0 w-10 h-10 rounded-2xl flex items-center justify-center border border-orange-500/25"
-                style={iconBadge.orange}
-              >
-                <Wrench size={18} className="text-orange-400" />
-              </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <h2 className="text-xl font-bold text-white">Active Build: GHL Pipeline Orchestration</h2>
-                  <span
-                    className="px-2 py-0.5 rounded-full text-orange-300 text-xs font-medium border border-orange-500/20"
-                    style={{
-                      background: 'linear-gradient(135deg, rgba(249,115,22,0.2), rgba(234,88,12,0.08))',
-                      boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.1)',
-                    }}
-                  >
-                    In Progress
-                  </span>
-                </div>
-                <p className="text-zinc-500 text-sm mt-0.5">Go High Level · Life Insurance · CRM Automation</p>
-              </div>
-            </div>
-
-            <div className="space-y-5">
-              {[
-                {
-                  label: 'The Challenge',
-                  text: 'In the life insurance sector, speed-to-lead is the single biggest predictor of a closed policy. My client operates on a fragmented tech stack that causes lead decay. We need to consolidate their marketing and sales operations into a single environment and ruthlessly optimize follow-up in a cost-constrained environment.',
-                },
-                {
-                  label: 'The Blueprint',
-                  text: 'Migrating their entire lead management and sales architecture into Go High Level. Instead of porting old data, rebuilding the funnel logic from the ground up. Using Claude Code to script custom webhooks, API integrations, and backend logic. Engineering automated SMS and email sequences to trigger the second a lead hits the system, with conditional logic to route high-value policy inquiries directly to sales.',
-                },
-                {
-                  label: 'The Objective',
-                  text: 'A unified, fully automated GHL architecture that eliminates manual lead triage — guaranteeing immediate engagement with every prospect and setting the foundation for scalable, tracked experimentation.',
-                },
-              ].map(({ label, text }) => (
-                <div key={label}>
-                  <p className="text-emerald-400 text-sm font-semibold mb-1">{label}</p>
-                  <p className="text-zinc-400 text-sm leading-relaxed">{text}</p>
-                </div>
-              ))}
-            </div>
-          </article>
-        </section>
-
-        {/* Training Guide CTA */}
-        <div
-          className="relative rounded-3xl overflow-hidden border border-white/[0.15]"
-          style={{
-            background: 'linear-gradient(145deg, rgba(52,211,153,0.09) 0%, rgba(255,255,255,0.04) 50%, rgba(59,130,246,0.08) 100%)',
-            boxShadow: '0 20px 60px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.2)',
-            backdropFilter: 'blur(24px)',
-            WebkitBackdropFilter: 'blur(24px)',
-          }}
-        >
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.06) 0%, transparent 40%)' }}
-          />
-          <div className="relative p-8">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-              <div className="flex items-start gap-4">
+                {/* Top shine */}
                 <div
-                  className="shrink-0 w-10 h-10 rounded-2xl flex items-center justify-center border border-emerald-500/25"
-                  style={iconBadge.emerald}
-                >
-                  <BookOpen size={18} className="text-emerald-400" />
+                  className="absolute inset-0 rounded-3xl pointer-events-none"
+                  style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.07) 0%, transparent 38%)' }}
+                />
+
+                <div className="relative flex items-start gap-4">
+                  <div
+                    className="shrink-0 w-11 h-11 rounded-2xl flex items-center justify-center border"
+                    style={{ ...iconStyle, borderColor }}
+                  >
+                    <Icon size={20} className={iconClass} />
+                  </div>
+
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between gap-2 mb-1">
+                      <h2 className="text-white font-bold text-base">{title}</h2>
+                      <ChevronRight size={16} className="text-zinc-600 group-hover:text-zinc-400 transition-colors shrink-0" />
+                    </div>
+                    <p className="text-zinc-500 text-sm leading-relaxed">{desc}</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-emerald-400 text-xs font-semibold uppercase tracking-widest mb-1">Free Resource</p>
-                  <h2 className="text-xl font-bold text-white mb-2">Build & Launch Your Website with AI</h2>
-                  <p className="text-zinc-400 text-sm leading-relaxed max-w-md">
-                    A step-by-step interactive guide to building and deploying your own website using
-                    Claude Code, VS Code, GitHub, and Vercel — no coding experience needed.
-                  </p>
-                </div>
-              </div>
-              <a
-                href="/build-and-launch-your-site"
-                onClick={() => trackEvent('outbound_click', { link_name: 'Build and Launch Guide' })}
-                className="shrink-0 inline-flex items-center gap-2 px-5 py-3 rounded-2xl text-white font-semibold text-sm transition-all hover:scale-[1.03]"
-                style={{
-                  background: 'linear-gradient(135deg, #34d399 0%, #10b981 60%, #059669 100%)',
-                  boxShadow: '0 6px 24px rgba(16,185,129,0.5), inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -1px 0 rgba(0,0,0,0.15)',
-                }}
-              >
-                Start the guide
-                <ChevronRight size={15} />
-              </a>
-            </div>
+              </TiltCard>
+            ))}
           </div>
-        </div>
+        </section>
 
       </main>
     </div>
