@@ -156,7 +156,9 @@ function LeadForm() {
         </div>
         <div>
           <p className="text-white font-semibold text-sm">You're in.</p>
-          <p className="text-zinc-500 text-xs">Check your inbox for the guide.</p>
+          <a href="/build-and-launch-your-site" className="text-emerald-400 text-xs hover:text-emerald-300 transition-colors">
+            Access your guide →
+          </a>
         </div>
       </div>
     )
@@ -349,12 +351,6 @@ export default function Home() {
                     Plus MarTech insights and growth frameworks straight to your inbox.
                   </p>
                 </div>
-                <a
-                  href="/build-and-launch-your-site"
-                  className="shrink-0 self-start text-zinc-500 hover:text-zinc-300 text-xs underline underline-offset-4 whitespace-nowrap transition-colors mt-1"
-                >
-                  Preview the guide ↗
-                </a>
               </div>
               <LeadForm />
             </div>
