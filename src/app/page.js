@@ -12,6 +12,40 @@ import {
   FileText,
 } from 'lucide-react'
 
+const glassCard = {
+  background: 'linear-gradient(145deg, rgba(255,255,255,0.11) 0%, rgba(255,255,255,0.03) 50%, rgba(255,255,255,0.07) 100%)',
+  boxShadow: '0 16px 48px rgba(0,0,0,0.65), 0 2px 12px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.22), inset 0 -1px 0 rgba(0,0,0,0.25)',
+  backdropFilter: 'blur(24px)',
+  WebkitBackdropFilter: 'blur(24px)',
+}
+
+const glassPill = {
+  background: 'linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.03))',
+  boxShadow: '0 2px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.15)',
+}
+
+const iconBadge = {
+  emerald: {
+    background: 'linear-gradient(135deg, rgba(52,211,153,0.3) 0%, rgba(16,185,129,0.1) 100%)',
+    boxShadow: '0 4px 14px rgba(52,211,153,0.2), inset 0 1px 0 rgba(255,255,255,0.2)',
+  },
+  blue: {
+    background: 'linear-gradient(135deg, rgba(96,165,250,0.3) 0%, rgba(59,130,246,0.1) 100%)',
+    boxShadow: '0 4px 14px rgba(96,165,250,0.2), inset 0 1px 0 rgba(255,255,255,0.2)',
+  },
+  orange: {
+    background: 'linear-gradient(135deg, rgba(251,146,60,0.3) 0%, rgba(249,115,22,0.1) 100%)',
+    boxShadow: '0 4px 14px rgba(251,146,60,0.2), inset 0 1px 0 rgba(255,255,255,0.2)',
+  },
+}
+
+const CardShine = () => (
+  <div
+    className="absolute inset-0 rounded-3xl pointer-events-none"
+    style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.07) 0%, transparent 38%)' }}
+  />
+)
+
 export default function Home() {
 
   const trackEvent = (eventName, data = {}) => {
@@ -25,8 +59,14 @@ export default function Home() {
 
       {/* Background glow */}
       <div className="pointer-events-none fixed inset-0 z-0">
-        <div className="absolute top-[-20%] left-[10%] w-[600px] h-[600px] rounded-full bg-emerald-500/8 blur-[120px]" />
-        <div className="absolute bottom-[-10%] right-[5%] w-[500px] h-[500px] rounded-full bg-blue-500/6 blur-[100px]" />
+        <div
+          className="absolute top-[-20%] left-[10%] w-[700px] h-[700px] rounded-full"
+          style={{ background: 'radial-gradient(circle, rgba(52,211,153,0.14) 0%, transparent 70%)', filter: 'blur(80px)' }}
+        />
+        <div
+          className="absolute bottom-[-10%] right-[5%] w-[600px] h-[600px] rounded-full"
+          style={{ background: 'radial-gradient(circle, rgba(59,130,246,0.1) 0%, transparent 70%)', filter: 'blur(80px)' }}
+        />
       </div>
 
       <main className="relative z-10 max-w-4xl mx-auto px-6 py-20">
@@ -35,7 +75,10 @@ export default function Home() {
         <section className="mb-20">
 
           {/* Location pill */}
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-zinc-400 text-sm mb-8 backdrop-blur-sm">
+          <div
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-zinc-300 text-sm mb-8 border border-white/[0.15]"
+            style={glassPill}
+          >
             <MapPin size={13} className="text-emerald-400" />
             Austin, TX · Open to Marketing Director & Head of Growth
           </div>
@@ -58,7 +101,11 @@ export default function Home() {
               { label: 'B2B SaaS', sub: 'focus' },
               { label: 'Austin TX', sub: 'based' },
             ].map(({ label, sub }) => (
-              <div key={label} className="px-4 py-2 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
+              <div
+                key={label}
+                className="px-4 py-2 rounded-2xl border border-white/[0.15]"
+                style={glassPill}
+              >
                 <span className="text-white font-semibold text-sm">{label}</span>
                 <span className="text-zinc-500 text-sm"> · {sub}</span>
               </div>
@@ -71,7 +118,11 @@ export default function Home() {
               href="https://linkedin.com/in/arvinpoole"
               target="_blank"
               onClick={() => trackEvent('outbound_click', { link_name: 'LinkedIn' })}
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-white text-black font-semibold text-sm hover:bg-zinc-100 transition-all"
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl text-black font-semibold text-sm transition-all hover:scale-[1.02]"
+              style={{
+                background: 'linear-gradient(135deg, #ffffff 0%, #d1d5db 100%)',
+                boxShadow: '0 4px 20px rgba(255,255,255,0.18), inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -1px 0 rgba(0,0,0,0.08)',
+              }}
             >
               <Link2 size={15} />
               Connect on LinkedIn
@@ -79,7 +130,11 @@ export default function Home() {
             </a>
             <button
               onClick={() => trackEvent('resume_download')}
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-white/5 border border-white/10 text-white font-semibold text-sm hover:bg-white/10 transition-all backdrop-blur-sm"
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl text-white font-semibold text-sm transition-all border border-white/[0.15] hover:scale-[1.02]"
+              style={{
+                background: 'linear-gradient(145deg, rgba(255,255,255,0.12), rgba(255,255,255,0.03))',
+                boxShadow: '0 4px 16px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.18), inset 0 -1px 0 rgba(0,0,0,0.2)',
+              }}
             >
               <FileText size={15} className="text-zinc-400" />
               Download Resume
@@ -95,9 +150,16 @@ export default function Home() {
           </div>
 
           {/* Case Study 1 */}
-          <article className="group rounded-3xl bg-white/[0.03] border border-white/10 backdrop-blur-sm p-8 hover:bg-white/[0.06] hover:border-white/20 transition-all duration-300">
+          <article
+            className="group rounded-3xl p-8 relative overflow-hidden border border-white/[0.12] hover:scale-[1.005] hover:border-white/[0.18] transition-all duration-300"
+            style={glassCard}
+          >
+            <CardShine />
             <div className="flex items-start gap-4 mb-6">
-              <div className="shrink-0 w-10 h-10 rounded-2xl bg-emerald-500/15 border border-emerald-500/20 flex items-center justify-center">
+              <div
+                className="shrink-0 w-10 h-10 rounded-2xl flex items-center justify-center border border-emerald-500/25"
+                style={iconBadge.emerald}
+              >
                 <BarChart2 size={18} className="text-emerald-400" />
               </div>
               <div>
@@ -134,9 +196,16 @@ export default function Home() {
           </article>
 
           {/* Case Study 2 */}
-          <article className="group rounded-3xl bg-white/[0.03] border border-white/10 backdrop-blur-sm p-8 hover:bg-white/[0.06] hover:border-white/20 transition-all duration-300">
+          <article
+            className="group rounded-3xl p-8 relative overflow-hidden border border-white/[0.12] hover:scale-[1.005] hover:border-white/[0.18] transition-all duration-300"
+            style={glassCard}
+          >
+            <CardShine />
             <div className="flex items-start gap-4 mb-6">
-              <div className="shrink-0 w-10 h-10 rounded-2xl bg-blue-500/15 border border-blue-500/20 flex items-center justify-center">
+              <div
+                className="shrink-0 w-10 h-10 rounded-2xl flex items-center justify-center border border-blue-500/25"
+                style={iconBadge.blue}
+              >
                 <Megaphone size={18} className="text-blue-400" />
               </div>
               <div>
@@ -173,15 +242,30 @@ export default function Home() {
           </article>
 
           {/* Case Study 3 */}
-          <article className="group rounded-3xl bg-white/[0.03] border border-white/10 backdrop-blur-sm p-8 hover:bg-white/[0.06] hover:border-white/20 transition-all duration-300">
+          <article
+            className="group rounded-3xl p-8 relative overflow-hidden border border-white/[0.12] hover:scale-[1.005] hover:border-white/[0.18] transition-all duration-300"
+            style={glassCard}
+          >
+            <CardShine />
             <div className="flex items-start gap-4 mb-6">
-              <div className="shrink-0 w-10 h-10 rounded-2xl bg-orange-500/15 border border-orange-500/20 flex items-center justify-center">
+              <div
+                className="shrink-0 w-10 h-10 rounded-2xl flex items-center justify-center border border-orange-500/25"
+                style={iconBadge.orange}
+              >
                 <Wrench size={18} className="text-orange-400" />
               </div>
               <div>
                 <div className="flex items-center gap-2">
                   <h2 className="text-xl font-bold text-white">Active Build: GHL Pipeline Orchestration</h2>
-                  <span className="px-2 py-0.5 rounded-full bg-orange-500/15 border border-orange-500/20 text-orange-400 text-xs font-medium">In Progress</span>
+                  <span
+                    className="px-2 py-0.5 rounded-full text-orange-300 text-xs font-medium border border-orange-500/20"
+                    style={{
+                      background: 'linear-gradient(135deg, rgba(249,115,22,0.2), rgba(234,88,12,0.08))',
+                      boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.1)',
+                    }}
+                  >
+                    In Progress
+                  </span>
                 </div>
                 <p className="text-zinc-500 text-sm mt-0.5">Go High Level · Life Insurance · CRM Automation</p>
               </div>
@@ -212,12 +296,26 @@ export default function Home() {
         </section>
 
         {/* Training Guide CTA */}
-        <div className="relative rounded-3xl overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 via-transparent to-blue-500/10" />
-          <div className="relative bg-white/[0.03] border border-white/10 backdrop-blur-sm rounded-3xl p-8">
+        <div
+          className="relative rounded-3xl overflow-hidden border border-white/[0.15]"
+          style={{
+            background: 'linear-gradient(145deg, rgba(52,211,153,0.09) 0%, rgba(255,255,255,0.04) 50%, rgba(59,130,246,0.08) 100%)',
+            boxShadow: '0 20px 60px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.2)',
+            backdropFilter: 'blur(24px)',
+            WebkitBackdropFilter: 'blur(24px)',
+          }}
+        >
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.06) 0%, transparent 40%)' }}
+          />
+          <div className="relative p-8">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
               <div className="flex items-start gap-4">
-                <div className="shrink-0 w-10 h-10 rounded-2xl bg-emerald-500/15 border border-emerald-500/20 flex items-center justify-center">
+                <div
+                  className="shrink-0 w-10 h-10 rounded-2xl flex items-center justify-center border border-emerald-500/25"
+                  style={iconBadge.emerald}
+                >
                   <BookOpen size={18} className="text-emerald-400" />
                 </div>
                 <div>
@@ -232,7 +330,11 @@ export default function Home() {
               <a
                 href="/build-and-launch-your-site"
                 onClick={() => trackEvent('outbound_click', { link_name: 'Build and Launch Guide' })}
-                className="shrink-0 inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-emerald-500 text-black font-semibold text-sm hover:bg-emerald-400 transition-all"
+                className="shrink-0 inline-flex items-center gap-2 px-5 py-3 rounded-2xl text-white font-semibold text-sm transition-all hover:scale-[1.03]"
+                style={{
+                  background: 'linear-gradient(135deg, #34d399 0%, #10b981 60%, #059669 100%)',
+                  boxShadow: '0 6px 24px rgba(16,185,129,0.5), inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -1px 0 rgba(0,0,0,0.15)',
+                }}
               >
                 Start the guide
                 <ChevronRight size={15} />
