@@ -49,7 +49,7 @@ const NAV_BLOCKS = [
     href: '/career',
     icon: Briefcase,
     title: 'Career',
-    desc: '35+ years across enterprise architecture, B2B SaaS, and growth leadership.',
+    desc: 'Enterprise architecture, B2B SaaS, and growth leadership across high-impact organizations.',
     iconStyle: {
       background: 'linear-gradient(135deg, rgba(96,165,250,0.3) 0%, rgba(59,130,246,0.1) 100%)',
       boxShadow: '0 4px 14px rgba(96,165,250,0.2), inset 0 1px 0 rgba(255,255,255,0.2)',
@@ -325,19 +325,6 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Stat pills */}
-          <div className="flex flex-wrap gap-3">
-            {[
-              { label: '15+ years', sub: 'experience' },
-              { label: 'B2B SaaS', sub: 'focus' },
-              { label: 'Austin TX', sub: 'based' },
-            ].map(({ label, sub }) => (
-              <div key={label} className="px-4 py-2 rounded-2xl border border-white/[0.15]" style={glassPill}>
-                <span className="text-white font-semibold text-sm">{label}</span>
-                <span className="text-zinc-500 text-sm"> · {sub}</span>
-              </div>
-            ))}
-          </div>
         </section>
 
         {/* Lead magnet */}

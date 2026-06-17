@@ -213,8 +213,8 @@ export default function Career() {
             <span className="text-zinc-500 text-sm font-medium uppercase tracking-widest">Career</span>
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-white tracking-tight leading-tight mb-4">
-            35+ years building<br />
-            <span className="text-emerald-400">systems that scale.</span>
+            Built to scale.<br />
+            <span className="text-emerald-400">Wired for growth.</span>
           </h1>
           <p className="text-zinc-400 text-base leading-relaxed max-w-2xl">
             Technical leader combining a foundation in enterprise systems engineering with deep expertise
