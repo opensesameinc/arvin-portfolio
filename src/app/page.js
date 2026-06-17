@@ -156,7 +156,7 @@ function LeadForm() {
         </div>
         <div>
           <p className="text-white font-semibold text-sm">You're in.</p>
-          <a href="/build-and-launch-your-site" className="text-emerald-400 text-xs hover:text-emerald-300 transition-colors">
+          <a href="/build-and-launch-your-site" target="_blank" rel="noopener noreferrer" className="text-emerald-400 text-xs hover:text-emerald-300 transition-colors">
             Access your guide →
           </a>
         </div>
