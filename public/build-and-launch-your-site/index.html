@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Build & Launch Your Website</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #ffffff;
+    --bg-soft: #f7f6f3;
+    --bg-card: #ffffff;
+    --text: #1a1a1a;
+    --text-muted: #6b6b6b;
+    --text-faint: #999;
+    --border: #e5e3de;
+    --border-strong: #ccc;
+    --accent: #1a56db;
+    --accent-bg: #eff4ff;
+    --accent-text: #1e40af;
+    --success: #0a7c4e;
+    --success-bg: #ecfdf5;
+    --success-border: #6ee7b7;
+    --warning: #92400e;
+    --warning-bg: #fffbeb;
+    --danger: #991b1b;
+    --danger-bg: #fef2f2;
+    --code-bg: #f4f3f0;
+    --radius: 10px;
+    --radius-sm: 6px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #111110;
+      --bg-soft: #1a1a19;
+      --bg-card: #1e1e1d;
+      --text: #e8e6e0;
+      --text-muted: #999;
+      --text-faint: #666;
+      --border: #2a2a28;
+      --border-strong: #444;
+      --accent: #4f8ef7;
+      --accent-bg: #1a2540;
+      --accent-text: #93bbfc;
+      --success: #34d399;
+      --success-bg: #052e1a;
+      --success-border: #065f3a;
+      --warning: #fbbf24;
+      --warning-bg: #1f1500;
+      --danger: #f87171;
+      --danger-bg: #2d0a0a;
+      --code-bg: #252523;
+    }
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg-soft);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  .header {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 24px;
+  }
+  .header-inner {
+    max-width: 720px; margin: 0 auto;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .phase-label { font-size: 12px; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; }
+  .progress-bar-wrap { flex: 1; background: var(--border); border-radius: 99px; height: 5px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: var(--accent); border-radius: 99px; transition: width 0.3s ease; }
+  .step-counter { font-size: 12px; color: var(--text-faint); white-space: nowrap; }
+
+  .main { max-width: 720px; margin: 0 auto; padding: 28px 24px 120px; }
+
+  .step-card { display: none; animation: fadein 0.2s ease; }
+  .step-card.active { display: block; }
+  @keyframes fadein { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* Already done banner */
+  .done-banner {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    background: var(--success-bg);
+    border: 1px solid var(--success-border);
+    border-radius: var(--radius);
+    padding: 10px 14px;
+    margin-bottom: 20px;
+    font-size: 14px;
+  }
+  .done-banner-left { display: flex; align-items: center; gap: 8px; color: var(--success); font-weight: 500; }
+  .done-banner-undo { font-size: 12px; color: var(--text-faint); cursor: pointer; text-decoration: underline; background: none; border: none; cursor: pointer; padding: 0; }
+  .done-banner-undo:hover { color: var(--text-muted); }
+
+  .skip-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--bg-soft);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px 14px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+  .skip-btn {
+    background: var(--success-bg);
+    color: var(--success);
+    border: 1px solid var(--success-border);
+    border-radius: var(--radius-sm);
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .skip-btn:hover { opacity: 0.85; }
+
+  .phase-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em;
+    padding: 4px 10px; border-radius: 99px; margin-bottom: 14px;
+    background: var(--accent-bg); color: var(--accent-text);
+  }
+
+  h1.step-title { font-size: 26px; font-weight: 700; color: var(--text); line-height: 1.25; margin-bottom: 8px; }
+  .step-subtitle { font-size: 16px; color: var(--text-muted); margin-bottom: 28px; line-height: 1.6; }
+
+  .steps-list { list-style: none; counter-reset: steps; display: flex; flex-direction: column; gap: 14px; margin: 20px 0; }
+  .steps-list li { counter-increment: steps; display: flex; gap: 14px; align-items: flex-start; }
+  .steps-list li::before {
+    content: counter(steps); min-width: 26px; height: 26px;
+    background: var(--accent-bg); color: var(--accent-text);
+    border-radius: 50%; font-size: 12px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 1px;
+  }
+  .steps-list li .li-content { flex: 1; font-size: 15px; color: var(--text); line-height: 1.6; }
+  .steps-list li .li-content strong { font-weight: 600; }
+
+  .callout {
+    border-radius: var(--radius); padding: 14px 16px; margin: 20px 0;
+    font-size: 14px; line-height: 1.6; display: flex; gap: 10px;
+  }
+  .callout-icon { font-size: 17px; flex-shrink: 0; margin-top: 1px; }
+  .callout-body strong { display: block; font-weight: 600; margin-bottom: 3px; font-size: 14px; }
+  .callout.tip { background: var(--accent-bg); color: var(--accent-text); }
+  .callout.tip .callout-icon::before { content: '💡'; }
+  .callout.warning { background: var(--warning-bg); color: var(--warning); }
+  .callout.warning .callout-icon::before { content: '⚠️'; }
+  .callout.success { background: var(--success-bg); color: var(--success); }
+  .callout.success .callout-icon::before { content: '✅'; }
+  .callout.cost { background: var(--warning-bg); color: var(--warning); }
+  .callout.cost .callout-icon::before { content: '💳'; }
+
+  .code-wrap { position: relative; margin: 16px 0; }
+  .code-block {
+    background: var(--code-bg); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 14px 16px;
+    font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
+    font-size: 13.5px; line-height: 1.7; color: var(--text);
+    overflow-x: auto; white-space: pre;
+  }
+  .copy-btn {
+    position: absolute; top: 8px; right: 8px;
+    background: var(--bg); border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm); padding: 4px 10px;
+    font-size: 11px; font-weight: 600; color: var(--text-muted);
+    cursor: pointer; transition: all 0.15s;
+  }
+  .copy-btn:hover { background: var(--accent-bg); color: var(--accent-text); }
+  .copy-btn.copied { background: var(--success-bg); color: var(--success); border-color: var(--success); }
+
+  code {
+    font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
+    background: var(--code-bg); padding: 1px 6px;
+    border-radius: 4px; font-size: 13px; border: 1px solid var(--border);
+  }
+
+  .limits-table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 16px 0; }
+  .limits-table th { text-align: left; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-faint); padding: 8px 12px; border-bottom: 1px solid var(--border); }
+  .limits-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); color: var(--text); }
+  .limits-table tr:last-child td { border-bottom: none; }
+  .limits-table td:last-child { color: var(--accent-text); font-weight: 500; }
+
+  .hero { text-align: center; padding: 20px 0 32px; }
+  .hero-icon { width: 72px; height: 72px; background: var(--accent-bg); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 36px; margin: 0 auto 20px; }
+  .hero h1 { font-size: 30px; font-weight: 700; margin-bottom: 10px; }
+  .hero p { font-size: 17px; color: var(--text-muted); max-width: 480px; margin: 0 auto 24px; }
+
+  .tool-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 20px 0; }
+  .tool-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; text-align: center; }
+  .tool-card .tool-icon { font-size: 24px; margin-bottom: 6px; }
+  .tool-card .tool-name { font-size: 14px; font-weight: 600; color: var(--text); }
+  .tool-card .tool-desc { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+  .tool-card .tool-cost { font-size: 11px; margin-top: 6px; padding: 2px 8px; border-radius: 99px; display: inline-block; }
+  .tool-card .tool-cost.free { background: var(--success-bg); color: var(--success); }
+  .tool-card .tool-cost.paid { background: var(--warning-bg); color: var(--warning); }
+
+  /* Interactive form styles */
+  .form-section { margin: 24px 0; }
+  .form-section h2 { font-size: 16px; font-weight: 600; margin-bottom: 14px; color: var(--text); }
+  .form-group { margin-bottom: 16px; }
+  .form-label { display: block; font-size: 13px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+  .form-hint { font-size: 12px; color: var(--text-faint); margin-bottom: 6px; display: block; }
+  .form-input, .form-textarea, .form-select {
+    width: 100%; padding: 10px 12px;
+    background: var(--bg-card); border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm); font-size: 14px; color: var(--text);
+    font-family: inherit; transition: border 0.15s;
+    resize: vertical;
+  }
+  .form-input:focus, .form-textarea:focus, .form-select:focus {
+    outline: none; border-color: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 15%, transparent);
+  }
+  .form-textarea { min-height: 80px; line-height: 1.6; }
+  .form-textarea.tall { min-height: 120px; }
+  .checkbox-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px; margin-top: 6px; }
+  .checkbox-item { display: flex; align-items: center; gap: 8px; font-size: 14px; cursor: pointer; }
+  .checkbox-item input { width: 16px; height: 16px; accent-color: var(--accent); cursor: pointer; }
+
+  .output-section { margin-top: 24px; }
+  .output-label { font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+  .output-label .live-badge { font-size: 10px; background: var(--accent-bg); color: var(--accent-text); padding: 2px 7px; border-radius: 99px; }
+  .output-box {
+    background: var(--code-bg); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 14px 16px;
+    font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
+    font-size: 13px; line-height: 1.7; color: var(--text);
+    white-space: pre-wrap; word-break: break-word;
+    min-height: 120px;
+  }
+  .output-placeholder { color: var(--text-faint); font-style: italic; font-family: inherit; }
+
+  .divider { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+
+  /* Nav */
+  .nav-bar {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: var(--bg); border-top: 1px solid var(--border);
+    padding: 14px 24px; z-index: 100;
+  }
+  .nav-inner { max-width: 720px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .btn { padding: 10px 22px; border-radius: var(--radius-sm); font-size: 15px; font-weight: 600; cursor: pointer; border: none; transition: all 0.15s; }
+  .btn-secondary { background: var(--bg-soft); color: var(--text-muted); border: 1px solid var(--border); }
+  .btn-secondary:hover { background: var(--border); }
+  .btn-primary { background: var(--accent); color: #fff; min-width: 120px; }
+  .btn-primary:hover { opacity: 0.9; }
+  .btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  .nav-step-dots { display: flex; gap: 5px; flex-wrap: wrap; justify-content: center; max-width: 300px; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--border); cursor: pointer; transition: all 0.2s; flex-shrink: 0; }
+  .dot.active { background: var(--accent); transform: scale(1.3); }
+  .dot.done { background: var(--success); }
+
+  p { margin: 12px 0; font-size: 15px; line-height: 1.7; }
+  h2 { font-size: 18px; font-weight: 600; margin: 24px 0 10px; }
+
+  .done-screen { text-align: center; padding: 32px 0; }
+  .done-screen .done-icon { font-size: 64px; margin-bottom: 16px; }
+  .done-screen h1 { font-size: 28px; font-weight: 700; margin-bottom: 10px; }
+  .done-screen p { font-size: 16px; color: var(--text-muted); max-width: 460px; margin: 0 auto 24px; }
+
+  .final-checklist { list-style: none; display: flex; flex-direction: column; gap: 10px; margin: 20px 0; text-align: left; }
+  .final-checklist li { display: flex; align-items: center; gap: 10px; font-size: 15px; }
+  .final-checklist li .check { width: 22px; height: 22px; border-radius: 50%; background: var(--success-bg); border: 1px solid var(--success-border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 12px; }
+
+  @media (max-width: 600px) {
+    .main { padding: 20px 16px 100px; }
+    h1.step-title { font-size: 22px; }
+    .hero h1 { font-size: 24px; }
+    .nav-step-dots { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <span class="phase-label" id="headerPhase">Welcome</span>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="progressBar" style="width: 0%"></div>
+    </div>
+    <span class="step-counter" id="stepCounter">1 / 22</span>
+  </div>
+</div>
+
+<main class="main" id="mainContent"></main>
+
+<nav class="nav-bar">
+  <div class="nav-inner">
+    <button class="btn btn-secondary" id="prevBtn" onclick="navigate(-1)" disabled>← Back</button>
+    <div class="nav-step-dots" id="dotContainer"></div>
+    <button class="btn btn-primary" id="nextBtn" onclick="navigate(1)">Next →</button>
+  </div>
+</nav>
+
+<script>
+// State
+let currentStep = 0;
+let completedSteps = {};
+
+// Step definitions — skippable:true means show the "already done" bar
+const steps = [
+  {
+    id: 'welcome',
+    phase: 'Welcome',
+    title: 'Build & Launch Your Website',
+    skippable: false,
+    render: () => `
+      <div class="hero">
+        <div class="hero-icon">🌐</div>
+        <h1>Build & Launch Your Website</h1>
+        <p>A step-by-step guide to building your own website using AI — no coding experience needed.</p>
+      </div>
+      <div class="tool-grid">
+        <div class="tool-card"><div class="tool-icon">🤖</div><div class="tool-name">Claude Code</div><div class="tool-desc">Your AI builder</div><span class="tool-cost paid">$20/mo</span></div>
+        <div class="tool-card"><div class="tool-icon">💻</div><div class="tool-name">VS Code</div><div class="tool-desc">Your workspace</div><span class="tool-cost free">Free</span></div>
+        <div class="tool-card"><div class="tool-icon">🐙</div><div class="tool-name">GitHub</div><div class="tool-desc">Code storage</div><span class="tool-cost free">Free</span></div>
+        <div class="tool-card"><div class="tool-icon">▲</div><div class="tool-name">Vercel</div><div class="tool-desc">Web hosting</div><span class="tool-cost free">Free</span></div>
+      </div>
+      <div class="callout tip"><div class="callout-icon"></div><div class="callout-body"><strong>Before you start</strong>Prepare your website idea, a short bio, any content you want on the site, and 2–3 websites you like the look of.</div></div>
+    `
+  },
+  {
+    id: 'claude-account',
+    phase: 'Create Accounts',
+    title: 'Create your Claude account',
+    skippable: true,
+    render: () => `
+      <div class="callout cost"><div class="callout-icon"></div><div class="callout-body"><strong>One paid account required</strong>Claude Code requires Claude Pro at $20/month. Everything else is free. You can cancel anytime.</div></div>
+      <ol class="steps-list">
+        <li><div class="li-content">Go to <strong>claude.ai</strong> and click <strong>Sign Up</strong></div></li>
+        <li><div class="li-content">Enter your email and create a password, or sign up with Google</div></li>
+        <li><div class="li-content">Verify your email address</div></li>
+        <li><div class="li-content">Click your profile icon (bottom left) → <strong>Upgrade to Pro</strong></div></li>
+        <li><div class="li-content">Enter billing info and confirm the $20/month subscription</div></li>
+      </ol>
+      <div class="callout success"><div class="callout-icon"></div><div class="callout-body">You now have access to Claude Code. Keep this tab open — you'll need it when setting up VS Code.</div></div>
+    `
+  },
+  {
+    id: 'github-account',
+    phase: 'Create Accounts',
+    title: 'Create your GitHub account',
+    skippable: true,
+    render: () => `
+      <p><strong>Why GitHub?</strong> Think of it like Google Drive, but for your website's code. It backs up your files and automatically updates your live site every time you make a change.</p>
+      <ol class="steps-list">
+        <li><div class="li-content">Go to <strong>github.com</strong> → click <strong>Sign up</strong></div></li>
+        <li><div class="li-content">Enter your email → click <strong>Continue</strong></div></li>
+        <li><div class="li-content">Create a password → click <strong>Continue</strong></div></li>
+        <li><div class="li-content">Choose a username — pick something professional like <code>janesmith</code> or <code>jane-creative</code></div></li>
+        <li><div class="li-content">Solve the verification puzzle → click <strong>Create account</strong></div></li>
+        <li><div class="li-content">Enter the launch code sent to your email</div></li>
+      </ol>
+      <h2>Set up two-factor authentication</h2>
+      <ol class="steps-list">
+        <li><div class="li-content">Click your profile photo → <strong>Settings</strong></div></li>
+        <li><div class="li-content">Click <strong>Password and authentication</strong> in the left sidebar</div></li>
+        <li><div class="li-content">Scroll to <strong>Two-factor authentication</strong> → click <strong>Enable</strong></div></li>
+        <li><div class="li-content">Choose <strong>SMS</strong> and follow the steps</div></li>
+        <li><div class="li-content">Save your recovery codes somewhere safe</div></li>
+      </ol>
+    `
+  },
+  {
+    id: 'vercel-account',
+    phase: 'Create Accounts',
+    title: 'Create your Vercel account',
+    skippable: true,
+    render: () => `
+      <p><strong>Why Vercel?</strong> This is where your website lives on the internet — for free. Sign up using GitHub so both accounts link automatically.</p>
+      <ol class="steps-list">
+        <li><div class="li-content">Go to <strong>vercel.com</strong> → click <strong>Sign Up</strong></div></li>
+        <li><div class="li-content">Select <strong>Continue with GitHub</strong></div></li>
+        <li><div class="li-content">In the GitHub popup, click <strong>Authorize Vercel</strong></div></li>
+        <li><div class="li-content">Select <strong>Personal</strong> when asked what you're building</div></li>
+        <li><div class="li-content">Select the <strong>Hobby</strong> plan — no credit card required</div></li>
+      </ol>
+      <h2>What the free plan includes</h2>
+      <table class="limits-table">
+        <thead><tr><th>Resource</th><th>Free limit</th></tr></thead>
+        <tbody>
+          <tr><td>Projects</td><td>Up to 200</td></tr>
+          <tr><td>Deployments per day</td><td>100</td></tr>
+          <tr><td>Monthly visitors</td><td>1,000,000</td></tr>
+          <tr><td>Custom domains</td><td>50 per project</td></tr>
+        </tbody>
+      </table>
+      <div class="callout warning"><div class="callout-icon"></div><div class="callout-body"><strong>Personal use only</strong>The free plan is for non-commercial personal projects. A portfolio is fine — a revenue-generating business site would need Vercel Pro ($20/mo).</div></div>
+    `
+  },
+  {
+    id: 'vscode',
+    phase: 'Install Tools',
+    title: 'Install VS Code',
+    skippable: true,
+    render: () => `
+      <p><strong>Why VS Code?</strong> VS Code is your workspace — like Microsoft Word, but for building websites. Claude Code lives inside it. Without it, you'd be working in a plain black terminal with no visual interface.</p>
+      <ol class="steps-list">
+        <li><div class="li-content">Go to <strong>code.visualstudio.com</strong></div></li>
+        <li><div class="li-content">Click the big <strong>Download</strong> button for your OS (Mac or Windows)</div></li>
+        <li><div class="li-content">Open the downloaded file and follow the install steps</div></li>
+        <li><div class="li-content">Open VS Code — you'll see a welcome screen</div></li>
+      </ol>
+      <div class="callout tip"><div class="callout-icon"></div><div class="callout-body"><strong>Mac tip</strong>When prompted, drag VS Code into your Applications folder so it appears in your dock.</div></div>
+    `
+  },
+  {
+    id: 'git',
+    phase: 'Install Tools',
+    title: 'Install Git',
+    skippable: true,
+    render: () => `
+      <p>Git connects VS Code to GitHub behind the scenes. Install it before Claude Code.</p>
+      <ol class="steps-list">
+        <li><div class="li-content">Go to <strong>git-scm.com/downloads</strong> and download for your OS</div></li>
+        <li><div class="li-content">Run the installer — accept all default options</div></li>
+        <li><div class="li-content"><strong>Restart your computer</strong> after Git installs</div></li>
+      </ol>
+      <div class="callout tip"><div class="callout-icon"></div><div class="callout-body"><strong>Mac users</strong>Open Terminal, type <code>git --version</code> and press Enter. If you see a version number, skip this step.</div></div>
+      <h2>Configure Git with your name and email (one-time)</h2>
+      <p>Open VS Code → <strong>Terminal → New Terminal</strong>, then run:</p>
+      <div class="code-wrap">
+        <div class="code-block" id="code-gitconfig">git config --global user.name "Your Name"
+git config --global user.email "youremail@example.com"</div>
+        <button class="copy-btn" onclick="copyCode('code-gitconfig', this)">Copy</button>
+      </div>
+      <div class="callout tip"><div class="callout-icon"></div><div class="callout-body">Use the same email address you used for GitHub.</div></div>
+    `
+  },
+  {
+    id: 'claude-ext',
+    phase: 'Install Tools',
+    title: 'Install Claude Code in VS Code',
+    skippable: true,
+    render: () => `
+      <ol class="steps-list">
+        <li><div class="li-content">Open VS Code</div></li>
+        <li><div class="li-content">Click the <strong>Extensions icon</strong> in the left sidebar (4 squares)</div></li>
+        <li><div class="li-content">Search for <strong>Claude Code</strong></div></li>
+        <li><div class="li-content">Click <strong>Install</strong> on the extension by Anthropic</div></li>
+        <li><div class="li-content">A Claude icon appears in the sidebar — click it</div></li>
+        <li><div class="li-content">Click <strong>Sign In</strong> → a browser window opens</div></li>
+        <li><div class="li-content">Log in with your Claude account → click <strong>Authorize</strong></div></li>
+        <li><div class="li-content">Return to VS Code — Claude Code is ready</div></li>
+      </ol>
+      <div class="callout success"><div class="callout-icon"></div><div class="callout-body">You should see a chat panel on the right side of VS Code. That's where you'll talk to Claude.</div></div>
+    `
+  },
+  {
+    id: 'gh-cli',
+    phase: 'Install Tools',
+    title: 'Install the GitHub CLI',
+    skippable: true,
+    render: () => `
+      <p>The GitHub CLI handles authentication automatically so you never need to type passwords or tokens when uploading your code.</p>
+      <ol class="steps-list">
+        <li><div class="li-content">Go to <strong>cli.github.com</strong> and download for your OS</div></li>
+        <li><div class="li-content">Run the installer with default options</div></li>
+        <li><div class="li-content">Open VS Code → <strong>Terminal → New Terminal</strong> and run:</div></li>
+      </ol>
+      <div class="code-wrap">
+        <div class="code-block" id="code-ghauth">gh auth login</div>
+        <button class="copy-btn" onclick="copyCode('code-ghauth', this)">Copy</button>
+      </div>
+      <ol class="steps-list" style="counter-reset: steps 3;">
+        <li><div class="li-content">Select <strong>GitHub.com</strong> → <strong>HTTPS</strong> → type <strong>Y</strong> → press Enter</div></li>
+        <li><div class="li-content">A browser window opens — click <strong>Authorize GitHub CLI</strong></div></li>
+        <li><div class="li-content">Back in the terminal you should see: <em>"Logged in as yourusername"</em></div></li>
+      </ol>
+    `
+  },
+  {
+    id: 'project-folder',
+    phase: 'Set Up Project',
+    title: 'Create your project folder',
+    skippable: true,
+    render: () => `
+      <ol class="steps-list">
+        <li><div class="li-content">Open <strong>Finder</strong> (Mac) or <strong>File Explorer</strong> (Windows)</div></li>
+        <li><div class="li-content">Go somewhere easy to find like <strong>Documents</strong></div></li>
+        <li><div class="li-content">Create a new folder with a simple name — no spaces, use dashes</div></li>
+      </ol>
+      <div class="callout tip"><div class="callout-icon"></div><div class="callout-body"><strong>Good names:</strong> <code>my-portfolio</code>, <code>jane-smith-site</code>, <code>my-bakery</code><br><strong>Avoid:</strong> spaces, symbols, or very long names</div></div>
+      <h2>Open the folder in VS Code</h2>
+      <ol class="steps-list">
+        <li><div class="li-content">Open VS Code</div></li>
+        <li><div class="li-content">Click <strong>File → Open Folder</strong></div></li>
+        <li><div class="li-content">Select the folder you just created → click <strong>Open</strong></div></li>
+        <li><div class="li-content">Your empty folder appears in the left sidebar — you're ready to build</div></li>
+      </ol>
+    `
+  },
+  {
+    id: 'prompt-builder',
+    phase: 'Build Your Site',
+    title: 'Describe your website to Claude',
+    skippable: false,
+    render: () => `
+      <p>Fill in the fields below. Your prompt will be generated automatically at the bottom — ready to copy and paste directly into the Claude Code chat panel.</p>
+      <div class="form-section">
+        <div class="form-group">
+          <label class="form-label" for="f-purpose">What is this website for?</label>
+          <span class="form-hint">e.g. Personal portfolio for my photography, coaching business landing page, resume site</span>
+          <input class="form-input" id="f-purpose" type="text" placeholder="e.g. Portfolio for my graphic design work" oninput="buildPrompt()">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Pages you want</label>
+          <div class="checkbox-grid">
+            <label class="checkbox-item"><input type="checkbox" value="Home page with a welcome message" onchange="buildPrompt()"> Home</label>
+            <label class="checkbox-item"><input type="checkbox" value="About me section" onchange="buildPrompt()"> About me</label>
+            <label class="checkbox-item"><input type="checkbox" value="Services section" onchange="buildPrompt()"> Services</label>
+            <label class="checkbox-item"><input type="checkbox" value="Portfolio / gallery section" onchange="buildPrompt()"> Portfolio / gallery</label>
+            <label class="checkbox-item"><input type="checkbox" value="Testimonials section" onchange="buildPrompt()"> Testimonials</label>
+            <label class="checkbox-item"><input type="checkbox" value="Contact form at the bottom" onchange="buildPrompt()"> Contact</label>
+            <label class="checkbox-item"><input type="checkbox" value="Blog section" onchange="buildPrompt()"> Blog</label>
+            <label class="checkbox-item"><input type="checkbox" value="Pricing section" onchange="buildPrompt()"> Pricing</label>
+          </div>
+          <input class="form-input" id="f-extra-pages" type="text" placeholder="Any other pages? e.g. FAQ, Team, Shop" style="margin-top:8px" oninput="buildPrompt()">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="f-name">Your name</label>
+          <input class="form-input" id="f-name" type="text" placeholder="e.g. Jane Smith" oninput="buildPrompt()">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="f-bio">Your bio or main content</label>
+          <span class="form-hint">Paste your bio, tagline, list of services — anything you want on the site</span>
+          <textarea class="form-textarea tall" id="f-bio" placeholder="e.g. I'm a freelance photographer based in Austin, TX specializing in portraits and events..." oninput="buildPrompt()"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="f-colors">Colors you like</label>
+          <input class="form-input" id="f-colors" type="text" placeholder="e.g. Dark navy and gold, clean white and sage green" oninput="buildPrompt()">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="f-feel">Style / feel</label>
+          <input class="form-input" id="f-feel" type="text" placeholder="e.g. Modern and minimal, warm and creative, professional and bold" oninput="buildPrompt()">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="f-refs">Websites I like the look of</label>
+          <span class="form-hint">Paste any URLs for inspiration (optional)</span>
+          <textarea class="form-textarea" id="f-refs" placeholder="https://..." oninput="buildPrompt()"></textarea>
+        </div>
+      </div>
+      <div class="output-section">
+        <div class="output-label">Your prompt <span class="live-badge">Live preview</span></div>
+        <div class="code-wrap">
+          <div class="output-box" id="prompt-output"><span class="output-placeholder">Fill in the fields above and your prompt will appear here, ready to copy into Claude Code.</span></div>
+          <button class="copy-btn" onclick="copyOutput('prompt-output', this)" id="copy-prompt-btn">Copy</button>
+        </div>
+      </div>
+      <div class="callout tip"><div class="callout-icon"></div><div class="callout-body"><strong>How to use this prompt</strong>Open Claude Code in VS Code, paste this into the chat, and press Enter. Claude will build the site. Come back here when it's done and move to the next step.</div></div>
+    `
+  },
+  {
+    id: 'refine',
+    phase: 'Build Your Site',
+    title: 'Review and refine your site',
+    skippable: false,
+    render: () => `
+      <ol class="steps-list">
+        <li><div class="li-content">Claude will create your website files — watch them appear in the left sidebar of VS Code</div></li>
+        <li><div class="li-content">Ask Claude to preview it: <em>"Can you show me a preview of the site?"</em></div></li>
+        <li><div class="li-content">Give feedback in plain English until you're happy</div></li>
+      </ol>
+      <h2>Example feedback</h2>
+      <ul style="margin: 12px 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; font-size: 15px;">
+        <li>"Make the background darker"</li>
+        <li>"Move the contact section to the bottom"</li>
+        <li>"Change the font to something more modern"</li>
+        <li>"Add a section for my services with these 3 items: ..."</li>
+        <li>"Use a more minimal layout overall"</li>
+      </ul>
+      <div class="callout tip"><div class="callout-icon"></div><div class="callout-body">Think of Claude like a designer you're giving feedback to. Go back and forth until it looks right — there's no limit on changes.</div></div>
+    `
+  },
+  {
+    id: 'claude-md',
+    phase: 'Build Your Site',
+    title: 'Create your CLAUDE.md file',
+    skippable: false,
+    render: () => `
+      <p><strong>Claude has no memory between sessions.</strong> Every time you close VS Code and come back, Claude starts fresh. Your files are always saved — but Claude needs to re-read them each time.</p>
+      <p><strong>CLAUDE.md</strong> is a special file Claude reads automatically at the start of every session. Fill in the form below, then copy the result directly into VS Code.</p>
+      <div class="form-section">
+        <div class="form-group">
+          <label class="form-label" for="cm-desc">What is this site?</label>
+          <input class="form-input" id="cm-desc" type="text" placeholder="e.g. Personal portfolio for my photography business" oninput="buildClaudeMd()">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="cm-pages">Pages and what they contain</label>
+          <span class="form-hint">One per line, e.g. "Home — welcome message and hero photo"</span>
+          <textarea class="form-textarea" id="cm-pages" placeholder="Home — welcome message&#10;About — my bio and background&#10;Contact — contact form at bottom" oninput="buildClaudeMd()"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="cm-colors">Colors and style</label>
+          <input class="form-input" id="cm-colors" type="text" placeholder="e.g. Dark navy and gold, clean and minimal" oninput="buildClaudeMd()">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="cm-decisions">Things already decided — do not change</label>
+          <span class="form-hint">Choices you've locked in so Claude doesn't second-guess them</span>
+          <textarea class="form-textarea" id="cm-decisions" placeholder="e.g. Single scrolling page layout&#10;Contact form always at the bottom" oninput="buildClaudeMd()"></textarea>
+        </div>
+      </div>
+      <div class="output-section">
+        <div class="output-label">Your CLAUDE.md file <span class="live-badge">Live preview</span></div>
+        <div class="code-wrap">
+          <div class="output-box" id="claude-md-output"><span class="output-placeholder">Fill in the fields above and your CLAUDE.md content will appear here.</span></div>
+          <button class="copy-btn" onclick="copyOutput('claude-md-output', this)">Copy</button>
+        </div>
+      </div>
+      <div class="callout tip"><div class="callout-icon"></div><div class="callout-body"><strong>How to save this</strong>In VS Code, click the New File icon in the sidebar, name it <code>CLAUDE.md</code>, paste this content, and save with Cmd+S (Mac) or Ctrl+S (Windows).</div></div>
+    `
+  },
+  {
+    id: 'git-init',
+    phase: 'Push to GitHub',
+    title: 'Initialize Git in your project',
+    skippable: false,
+    render: () => `
+      <ol class="steps-list">
+        <li><div class="li-content">In VS Code, click <strong>Terminal → New Terminal</strong></div></li>
+        <li><div class="li-content">A panel opens at the bottom — type these commands one at a time, pressing <strong>Enter</strong> after each:</div></li>
+      </ol>
+      <div class="code-wrap">
+        <div class="code-block" id="code-gitinit">git init
+git add .
+git commit -m "first version of my website"</div>
+        <button class="copy-btn" onclick="copyCode('code-gitinit', this)">Copy</button>
+      </div>
+      <div class="callout tip"><div class="callout-icon"></div><div class="callout-body"><strong>What this does</strong>Creates a version history for your project and saves a snapshot of all your current files. Think of it like saving a document for the first time.</div></div>
+    `
+  },
+  {
+    id: 'github-repo',
+    phase: 'Push to GitHub',
+    title: 'Create a GitHub repository',
+    skippable: false,
+    render: () => `
+      <p>A repository is a home for your project on GitHub — like a dedicated folder in the cloud.</p>
+      <ol class="steps-list">
+        <li><div class="li-content">Go to <strong>github.com</strong> and log in</div></li>
+        <li><div class="li-content">Click the <strong>+</strong> icon (top right) → <strong>New repository</strong></div></li>
+        <li><div class="li-content">Give it the same name as your project folder (e.g. <code>my-portfolio</code>)</div></li>
+        <li><div class="li-content">Leave it set to <strong>Public</strong></div></li>
+        <li><div class="li-content">Click <strong>Create repository</strong></div></li>
+        <li><div class="li-content">Copy the block of commands under <strong>"…or push an existing repository"</strong></div></li>
+      </ol>
+      <div class="callout tip"><div class="callout-icon"></div><div class="callout-body">Keep the GitHub tab open — you'll paste those commands in the next step.</div></div>
+    `
+  },
+  {
+    id: 'git-push',
+    phase: 'Push to GitHub',
+    title: 'Push your code to GitHub',
+    skippable: false,
+    render: () => `
+      <ol class="steps-list">
+        <li><div class="li-content">Go back to VS Code's Terminal</div></li>
+        <li><div class="li-content">Paste the commands from GitHub and press Enter. They look like this:</div></li>
+      </ol>
+      <div class="code-wrap">
+        <div class="code-block" id="code-push">git remote add origin https://github.com/yourusername/my-portfolio.git
+git branch -M main
+git push -u origin main</div>
+        <button class="copy-btn" onclick="copyCode('code-push', this)">Copy</button>
+      </div>
+      <ol class="steps-list" style="counter-reset: steps 2;">
+        <li><div class="li-content">If prompted to log in, follow the browser prompts</div></li>
+        <li><div class="li-content">Refresh your GitHub page — you should see your files there</div></li>
+      </ol>
+      <div class="callout success"><div class="callout-icon"></div><div class="callout-body">Your code is now backed up on GitHub. Every future change you push will appear here automatically.</div></div>
+    `
+  },
+  {
+    id: 'vercel-deploy',
+    phase: 'Launch on Vercel',
+    title: 'Deploy your site to Vercel',
+    skippable: false,
+    render: () => `
+      <p>This is the moment your website goes live on the internet.</p>
+      <ol class="steps-list">
+        <li><div class="li-content">Go to <strong>vercel.com</strong> and log in</div></li>
+        <li><div class="li-content">Click <strong>Add New → Project</strong></div></li>
+        <li><div class="li-content">Find your GitHub repository in the list → click <strong>Import</strong></div></li>
+        <li><div class="li-content">Leave all settings as-is → click <strong>Deploy</strong></div></li>
+        <li><div class="li-content">Wait about 60 seconds while Vercel builds your site</div></li>
+        <li><div class="li-content">You'll get a live URL like <code>my-portfolio.vercel.app</code></div></li>
+      </ol>
+    `
+  },
+  {
+    id: 'site-live',
+    phase: 'Launch on Vercel',
+    title: 'Your site is live!',
+    skippable: false,
+    render: () => `
+      <div class="callout success"><div class="callout-icon"></div><div class="callout-body"><strong>Congratulations!</strong> Your website is now live on the internet. Anyone in the world can visit it.</div></div>
+      <ol class="steps-list">
+        <li><div class="li-content">Click the URL Vercel gave you to see your live site</div></li>
+        <li><div class="li-content">Share the URL with friends, family, or clients</div></li>
+      </ol>
+      <h2>Optional: Connect a custom domain</h2>
+      <p>If you have your own domain (e.g. <code>janesmith.com</code>):</p>
+      <ol class="steps-list">
+        <li><div class="li-content">In Vercel, go to your project → <strong>Settings → Domains</strong></div></li>
+        <li><div class="li-content">Type in your domain → click <strong>Add</strong></div></li>
+        <li><div class="li-content">Follow Vercel's DNS instructions in your domain registrar</div></li>
+        <li><div class="li-content">Within a few hours, your site is live at your custom domain</div></li>
+      </ol>
+    `
+  },
+  {
+    id: 'updates',
+    phase: 'Making Updates',
+    title: 'How to update your site in the future',
+    skippable: false,
+    render: () => `
+      <p>Claude has no memory between sessions. Each time you come back, re-orient it with a quick message.</p>
+      <h2>Returning to your project</h2>
+      <ol class="steps-list">
+        <li><div class="li-content">Open VS Code → <strong>File → Open Folder</strong> → select your project folder</div></li>
+        <li><div class="li-content">Click the Claude icon → start a new chat</div></li>
+        <li><div class="li-content">Say: <em>"I'm back to work on my website. Please read the files and let me know what we have."</em></div></li>
+        <li><div class="li-content">Claude reads your CLAUDE.md and all your files, and is ready to continue</div></li>
+        <li><div class="li-content">Ask for whatever change you want</div></li>
+      </ol>
+      <h2>Publishing your changes</h2>
+      <div class="code-wrap">
+        <div class="code-block" id="code-update">git add .
+git commit -m "describe what you changed"
+git push</div>
+        <button class="copy-btn" onclick="copyCode('code-update', this)">Copy</button>
+      </div>
+      <div class="callout success"><div class="callout-icon"></div><div class="callout-body">Vercel detects the push automatically and updates your live site within seconds.</div></div>
+    `
+  },
+  {
+    id: 'mcp-intro',
+    phase: 'Going Further',
+    title: 'What are MCP servers?',
+    skippable: false,
+    render: () => `
+      <p>By default, Claude can only see the files in your project folder. <strong>MCP servers are like apps you plug into Claude</strong> — they give it access to other tools and platforms.</p>
+      <h2>Without MCP</h2>
+      <div class="callout warning"><div class="callout-icon"></div><div class="callout-body">You: "Did my site deploy successfully?"<br><br>Claude: "I don't have access to Vercel, so I can't check — you'd need to log in and look yourself."</div></div>
+      <h2>With the Vercel MCP connected</h2>
+      <div class="callout success"><div class="callout-icon"></div><div class="callout-body">You: "Did my site deploy successfully?"<br><br>Claude: "Yes — your last deployment finished 4 minutes ago and your site is live."</div></div>
+      <h2>Other things you can connect Claude to</h2>
+      <ul style="margin:12px 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; font-size:15px;">
+        <li><strong>Notion</strong> — Claude reads your Notion pages and pulls content into your site</li>
+        <li><strong>Google Drive</strong> — Claude accesses documents and images from your Drive</li>
+        <li><strong>GitHub</strong> — Claude manages your code repository and history</li>
+      </ul>
+    `
+  },
+  {
+    id: 'mcp-vercel',
+    phase: 'Going Further',
+    title: 'Connect Claude to Vercel (MCP)',
+    skippable: true,
+    render: () => `
+      <p>Since your site is already on Vercel, this is the most useful MCP to add first.</p>
+      <h2>Setup — one command</h2>
+      <ol class="steps-list">
+        <li><div class="li-content">Open VS Code and your project folder</div></li>
+        <li><div class="li-content">Open the Terminal and run:</div></li>
+      </ol>
+      <div class="code-wrap">
+        <div class="code-block" id="code-mcp">claude mcp add --transport http vercel https://mcp.vercel.com</div>
+        <button class="copy-btn" onclick="copyCode('code-mcp', this)">Copy</button>
+      </div>
+      <ol class="steps-list" style="counter-reset: steps 2;">
+        <li><div class="li-content">Open Claude Code → start a new chat</div></li>
+        <li><div class="li-content">Type <code>/mcp</code> and press Enter</div></li>
+        <li><div class="li-content">Click <strong>Vercel</strong> in the list to authorize</div></li>
+        <li><div class="li-content">A browser window opens — log in to Vercel and click <strong>Authorize</strong></div></li>
+        <li><div class="li-content">Return to VS Code — Vercel is now connected</div></li>
+      </ol>
+      <div class="callout warning"><div class="callout-icon"></div><div class="callout-body"><strong>Security note</strong>Only connect MCP servers from sources you trust. Always use the official Vercel URL: <code>https://mcp.vercel.com</code></div></div>
+    `
+  },
+  {
+    id: 'done',
+    phase: 'Complete!',
+    title: 'Done',
+    skippable: false,
+    render: () => `
+      <div class="done-screen">
+        <div class="done-icon">🎉</div>
+        <h1>Your website is live!</h1>
+        <p>You built and launched a real website using AI — with no coding experience.</p>
+      </div>
+      <ul class="final-checklist">
+        <li><div class="check">✓</div> Created Claude, GitHub, and Vercel accounts</li>
+        <li><div class="check">✓</div> Installed VS Code, Git, Claude Code, and the GitHub CLI</li>
+        <li><div class="check">✓</div> Built your website with Claude Code in plain English</li>
+        <li><div class="check">✓</div> Created a CLAUDE.md so Claude remembers your project</li>
+        <li><div class="check">✓</div> Pushed your code to GitHub</li>
+        <li><div class="check">✓</div> Deployed your live website on Vercel</li>
+        <li><div class="check">✓</div> Connected Claude to Vercel via MCP</li>
+      </ul>
+      <hr class="divider">
+      <p style="text-align:center; color: var(--text-muted); font-size:14px;">Guide by <strong>Arvin Poole</strong> · <a href="https://arvinpoole.com" style="color:var(--accent)">arvinpoole.com</a></p>
+    `
+  }
+];
+
+const total = steps.length;
+
+// Persist state
+function save() {
+  localStorage.setItem('wt-step', currentStep);
+  localStorage.setItem('wt-done', JSON.stringify(completedSteps));
+}
+function load() {
+  const s = localStorage.getItem('wt-step');
+  const d = localStorage.getItem('wt-done');
+  if (s !== null) currentStep = parseInt(s, 10);
+  if (d) completedSteps = JSON.parse(d);
+}
+
+function markDone(idx) {
+  completedSteps[idx] = true;
+  save();
+  render();
+}
+function unmarkDone(idx) {
+  delete completedSteps[idx];
+  save();
+  render();
+}
+
+function navigate(dir) {
+  if (dir === 1 && currentStep === total - 1) { currentStep = 0; save(); render(); return; }
+  currentStep = Math.max(0, Math.min(total - 1, currentStep + dir));
+  save();
+  render();
+}
+
+function render() {
+  const step = steps[currentStep];
+  const isDone = !!completedSteps[currentStep];
+
+  let topBar = '';
+  if (isDone) {
+    topBar = `<div class="done-banner">
+      <div class="done-banner-left">✅ You've already completed this step</div>
+      <button class="done-banner-undo" onclick="unmarkDone(${currentStep})">Undo</button>
+    </div>`;
+  } else if (step.skippable) {
+    topBar = `<div class="skip-bar">
+      <span>Already done this step?</span>
+      <button class="skip-btn" onclick="markDone(${currentStep}); navigate(1)">Mark done & continue ✓</button>
+    </div>`;
+  }
+
+  const showTitle = currentStep !== 0 && currentStep !== total - 1;
+
+  document.getElementById('mainContent').innerHTML = `
+    <div class="step-card active">
+      ${topBar}
+      <div class="phase-badge">${step.phase}</div>
+      ${showTitle ? `<h1 class="step-title">${step.title}</h1>` : ''}
+      ${step.render()}
+    </div>`;
+
+  document.getElementById('headerPhase').textContent = step.phase;
+  document.getElementById('stepCounter').textContent = `${currentStep + 1} / ${total}`;
+  document.getElementById('progressBar').style.width = ((currentStep / (total - 1)) * 100) + '%';
+  document.getElementById('prevBtn').disabled = currentStep === 0;
+  document.getElementById('nextBtn').textContent = currentStep === total - 1 ? 'Start over' : 'Next →';
+
+  renderDots();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function renderDots() {
+  const c = document.getElementById('dotContainer');
+  c.innerHTML = '';
+  steps.forEach((_, i) => {
+    const d = document.createElement('div');
+    const isDone = !!completedSteps[i];
+    d.className = 'dot' + (i === currentStep ? ' active' : isDone ? ' done' : '');
+    d.title = steps[i].title;
+    d.onclick = () => { currentStep = i; save(); render(); };
+    c.appendChild(d);
+  });
+}
+
+// Prompt builder
+function buildPrompt() {
+  const purpose = v('f-purpose');
+  const name = v('f-name');
+  const bio = v('f-bio');
+  const colors = v('f-colors');
+  const feel = v('f-feel');
+  const refs = v('f-refs');
+  const extraPages = v('f-extra-pages');
+
+  const pages = [...document.querySelectorAll('#mainContent input[type=checkbox]:checked')]
+    .map(cb => '- ' + cb.value);
+  if (extraPages) pages.push('- ' + extraPages);
+
+  if (!purpose && !name && !bio && pages.length === 0) {
+    document.getElementById('prompt-output').innerHTML = '<span class="output-placeholder">Fill in the fields above and your prompt will appear here, ready to copy into Claude Code.</span>';
+    return;
+  }
+
+  let out = 'I want to build a personal website. Here\'s what I need:\n\n';
+  if (purpose) out += `Purpose: ${purpose}\n\n`;
+  if (pages.length) out += `Pages I want:\n${pages.join('\n')}\n\n`;
+  if (name || bio) {
+    out += 'Content:\n';
+    if (name) out += `- My name is ${name}\n`;
+    if (bio) out += `- ${bio}\n`;
+    out += '\n';
+  }
+  if (colors || feel || refs) {
+    out += 'Style:\n';
+    if (colors) out += `- Colors I like: ${colors}\n`;
+    if (feel) out += `- Feel: ${feel}\n`;
+    if (refs) out += `- Websites I like the look of:\n${refs.split('\n').map(r => '  ' + r).join('\n')}\n`;
+    out += '\n';
+  }
+  out += 'Please build this as a simple HTML/CSS website I can deploy to Vercel.';
+  document.getElementById('prompt-output').textContent = out;
+}
+
+// CLAUDE.md builder
+function buildClaudeMd() {
+  const desc = v('cm-desc');
+  const pages = v('cm-pages');
+  const colors = v('cm-colors');
+  const decisions = v('cm-decisions');
+
+  if (!desc && !pages && !colors && !decisions) {
+    document.getElementById('claude-md-output').innerHTML = '<span class="output-placeholder">Fill in the fields above and your CLAUDE.md content will appear here.</span>';
+    return;
+  }
+
+  let out = '# My Website Project\n\n';
+  if (desc) out += `## What this site is\n${desc}\n\n`;
+  if (pages) out += `## Pages on this site\n${pages}\n\n`;
+  if (colors) out += `## My preferences\n- Colors and style: ${colors}\n\n`;
+  if (decisions) out += `## Things already decided — do not change\n${decisions.split('\n').map(l => l.trim() ? '- ' + l : '').join('\n')}\n\n`;
+  out += '## How to pick up where we left off\nRead all files in this folder first, then ask me what I\'d like to change.';
+
+  document.getElementById('claude-md-output').textContent = out;
+}
+
+function v(id) {
+  const el = document.getElementById(id);
+  return el ? el.value.trim() : '';
+}
+
+function copyCode(id, btn) {
+  const text = document.getElementById(id).textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied!'; btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+function copyOutput(id, btn) {
+  const el = document.getElementById(id);
+  const text = el.querySelector('.output-placeholder') ? '' : el.textContent;
+  if (!text) { btn.textContent = 'Nothing yet'; setTimeout(() => btn.textContent = 'Copy', 1500); return; }
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied!'; btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+load();
+render();
+</script>
+</body>
+</html>
