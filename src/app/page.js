@@ -224,10 +224,10 @@ export default function Home() {
                   style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.08) 0%, transparent 50%)', borderRadius: '50%' }}
                 />
                 <Image
-                  src="/arvin.jpg"
+                  src="/arvin.png"
                   alt="Arvin Poole"
                   fill
-                  className="rounded-full object-cover object-top grayscale"
+                  className="rounded-full object-cover object-top"
                   priority
                 />
               </div>
