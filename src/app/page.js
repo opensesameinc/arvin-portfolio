@@ -1,139 +1,247 @@
 'use client'
 
+import {
+  ArrowUpRight,
+  MapPin,
+  BarChart2,
+  Megaphone,
+  Wrench,
+  BookOpen,
+  ChevronRight,
+  Link2,
+  FileText,
+} from 'lucide-react'
+
 export default function Home() {
-  
-  // Custom function to push events to GTM
+
   const trackEvent = (eventName, data = {}) => {
     if (typeof window !== 'undefined' && window.dataLayer) {
-      window.dataLayer.push({
-        event: eventName,
-        ...data
-      });
+      window.dataLayer.push({ event: eventName, ...data })
     }
-  };
+  }
 
   return (
-    <main className="max-w-4xl mx-auto px-6 py-20">
-      
-      {/* Hero Section */}
-      <section className="mb-24">
-        <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 tracking-tight">
-          Arvin Poole <span className="text-emerald-500">|</span> Growth Marketing & MarTech Architect
-        </h1>
-        <p className="text-xl md:text-2xl text-zinc-400 mb-6 leading-relaxed">
-          I build data-driven acquisition engines, orchestrate complex CRM infrastructures, and drive measurable pipeline growth for B2B SaaS and high-CAC industries.
-        </p>
-        <p className="text-lg text-zinc-500 mb-8 max-w-2xl">
-          15+ years of experience turning marketing automation, paid media, and empirical data into revenue. Currently based in Austin, TX, and open to Marketing Director and Head of Growth roles.
-        </p>
-        <div className="flex gap-4">
-          <a 
-            href="https://linkedin.com/in/arvinpoole" 
-            target="_blank"
-            onClick={() => trackEvent('outbound_click', { link_name: 'LinkedIn' })}
-            className="px-6 py-3 bg-white text-black font-semibold rounded hover:bg-zinc-200 transition-colors"
-          >
-            Connect on LinkedIn
-          </a>
-          <button 
-            onClick={() => trackEvent('resume_download')}
-            className="px-6 py-3 border border-zinc-700 text-white font-semibold rounded hover:border-emerald-500 hover:text-emerald-400 transition-colors"
-          >
-            Download Resume
-          </button>
-        </div>
-      </section>
+    <div className="min-h-screen bg-zinc-950 relative overflow-hidden">
 
-      {/* Case Studies Grid */}
-      <div className="space-y-16">
-        
-        {/* Case Study 1 */}
-        <article className="p-8 border border-zinc-800 bg-zinc-900/50 rounded-lg">
-          <h2 className="text-2xl font-bold text-white mb-4">Lead Scoring & CRM Orchestration</h2>
-          <div className="space-y-4">
-            <div>
-              <h3 className="text-emerald-400 font-semibold mb-1">The Challenge</h3>
-              <p>Silktide was transitioning from a sales-led, outbound-heavy motion to an inbound marketing engine. They needed a measurable qualification model that bridged the gap between marketing and sales, but the existing CRM architecture lacked the governance to support it.</p>
-            </div>
-            <div>
-              <h3 className="text-emerald-400 font-semibold mb-1">The Execution</h3>
-              <p>Instead of just assigning points to pageviews, I built a foundational CRM architecture first. I established strict lifecycle ownership rules where HubSpot owned scoring and the early lifecycle, while Salesforce owned SQLs and downstream stages. Once the governance was locked down, I designed and operationalized a 100-point B2B lead scoring model across both platforms. The model was logically split between firmographic fit (40 points) and behavioral intent (60 points). To ensure execution, I built a 36-task, seven-phase build plan and handed off clear, documented specifications to the RevOps team.</p>
-            </div>
-            <div>
-              <h3 className="text-emerald-400 font-semibold mb-1">The Empirical Pivot</h3>
-              <p>I do not build models on boardroom assumptions. To calibrate the scoring thresholds, I pulled and analyzed 12 months of historical demo-requester data. The analysis revealed that 94 percent of conversions were actually single-touch events. Based on that data, I killed the planned multi-touch bonus weighting and adjusted the engagement thresholds to match where converters actually lived.</p>
-            </div>
-            <div>
-              <h3 className="text-emerald-400 font-semibold mb-1">The Result</h3>
-              <p>A fully operational, data-backed scoring engine that aligned marketing and sales around a single source of truth, eliminating disqualification noise and accelerating speed-to-lead for high-intent buyers.</p>
-            </div>
-          </div>
-        </article>
-
-        {/* Case Study 2 */}
-        <article className="p-8 border border-zinc-800 bg-zinc-900/50 rounded-lg">
-          <h2 className="text-2xl font-bold text-white mb-4">Paid Media Architecture & Regulatory Agility</h2>
-          <div className="space-y-4">
-            <div>
-              <h3 className="text-emerald-400 font-semibold mb-1">The Challenge</h3>
-              <p>A previous $1,220 LinkedIn campaign died in an algorithmic death spiral because it used a conversion objective without enough conversion volume to optimize. The business needed a functional acquisition engine for the U.S. Higher Education vertical using our strongest first-party data asset: a public accessibility index of 945 universities.</p>
-            </div>
-            <div>
-              <h3 className="text-emerald-400 font-semibold mb-1">The Execution</h3>
-              <p>I designed a 10-day, $1,800 validation campaign targeting digital and accessibility leaders. To prevent algorithmic throttling, I changed the objective to Website Visits. I engineered the full measurement architecture, ensuring Insight Tag coverage, Conversions API deduplication, and precise UTM structures that passed data perfectly into HubSpot scoring fields. I also wrote the creative briefs, balancing a deliberately anti-corporate visual identity with the authoritative framing required for public-sector buyers.</p>
-            </div>
-            <div>
-              <h3 className="text-emerald-400 font-semibold mb-1">The Regulatory Pivot</h3>
-              <p>Mid-build, the DOJ issued an Interim Final Rule extending the ADA Title II compliance deadline. I executed a surgical pivot on the copy. Instead of relying on immediate compliance fear, I rolled out deadline-aware angles like "The DOJ delayed it. The lawsuits did not." The messaging changed, but the audience, budget, and tracking structure remained entirely untouched.</p>
-            </div>
-            <div>
-              <h3 className="text-emerald-400 font-semibold mb-1">The Result</h3>
-              <p>I launched a technically sound validation engine to test our riskiest assumption (CTR on the Index hook) at a low cost. This sequenced approach protected the marketing team from wasting hours on a heavy 25-ad-set ABM build before the core message was proven in the market.</p>
-            </div>
-          </div>
-        </article>
-
-        {/* Case Study 3 */}
-        <article className="p-8 border border-zinc-800 bg-zinc-900/50 rounded-lg">
-          <h2 className="text-2xl font-bold text-white mb-4">Active Build: GHL Pipeline Orchestration</h2>
-          <div className="space-y-4">
-            <div>
-              <h3 className="text-emerald-400 font-semibold mb-1">The Challenge</h3>
-              <p>In the life insurance sector, speed-to-lead is the single biggest predictor of a closed policy. My client is currently operating on a fragmented tech stack that causes lead decay. We need to consolidate their marketing and sales operations into a single environment and ruthlessly optimize the follow-up process in a tightly cost-constrained environment.</p>
-            </div>
-            <div>
-              <h3 className="text-emerald-400 font-semibold mb-1">The Blueprint</h3>
-              <p>I am currently migrating their entire lead management and sales architecture into Go High Level (GHL). Instead of just porting over old data, I am rebuilding the funnel logic from the ground up. To accelerate the technical build, I am using Claude Code to script the custom webhooks, API integrations, and backend logic. I am engineering automated SMS and email nurturing sequences designed to trigger the second a lead hits the system, with the goal of driving response times down to zero. I am also building conditional logic into the pipeline to immediately flag and route high-value policy inquiries directly to the sales team to separate signal from noise.</p>
-            </div>
-            <div>
-              <h3 className="text-emerald-400 font-semibold mb-1">The Objective</h3>
-              <p>A unified, fully automated GHL architecture that eliminates manual lead triage. Once deployed, the system will guarantee immediate engagement with every prospect, maximizing the conversion rate of expensive demand-gen traffic and setting the foundation for scalable, tracked experimentation.</p>
-            </div>
-          </div>
-        </article>
-
+      {/* Background glow */}
+      <div className="pointer-events-none fixed inset-0 z-0">
+        <div className="absolute top-[-20%] left-[10%] w-[600px] h-[600px] rounded-full bg-emerald-500/8 blur-[120px]" />
+        <div className="absolute bottom-[-10%] right-[5%] w-[500px] h-[500px] rounded-full bg-blue-500/6 blur-[100px]" />
       </div>
 
-      {/* Client Training Guide */}
-      <section className="mt-16 p-8 border border-zinc-800 bg-zinc-900/50 rounded-lg">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-          <div>
-            <p className="text-emerald-500 text-sm font-semibold uppercase tracking-widest mb-2">Free Resource</p>
-            <h2 className="text-2xl font-bold text-white mb-3">Build & Launch Your Website with AI</h2>
-            <p className="text-zinc-400 max-w-xl">
-              A step-by-step interactive guide for building and deploying your own website using Claude Code, VS Code, GitHub, and Vercel — no coding experience needed.
-            </p>
-          </div>
-          <a
-            href="/build-and-launch-your-site"
-            onClick={() => trackEvent('outbound_click', { link_name: 'Build and Launch Guide' })}
-            className="shrink-0 px-6 py-3 bg-emerald-500 text-black font-semibold rounded hover:bg-emerald-400 transition-colors text-center"
-          >
-            Start the guide →
-          </a>
-        </div>
-      </section>
+      <main className="relative z-10 max-w-4xl mx-auto px-6 py-20">
 
-    </main>
-  );
+        {/* Hero */}
+        <section className="mb-20">
+
+          {/* Location pill */}
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-zinc-400 text-sm mb-8 backdrop-blur-sm">
+            <MapPin size={13} className="text-emerald-400" />
+            Austin, TX · Open to Marketing Director & Head of Growth
+          </div>
+
+          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 tracking-tight leading-[1.1]">
+            Arvin Poole
+            <span className="block text-emerald-400">Growth Marketing &</span>
+            <span className="block">MarTech Architect</span>
+          </h1>
+
+          <p className="text-xl text-zinc-400 mb-8 leading-relaxed max-w-2xl">
+            I build data-driven acquisition engines, orchestrate complex CRM infrastructures,
+            and drive measurable pipeline growth for B2B SaaS and high-CAC industries.
+          </p>
+
+          {/* Stat pills */}
+          <div className="flex flex-wrap gap-3 mb-10">
+            {[
+              { label: '15+ years', sub: 'experience' },
+              { label: 'B2B SaaS', sub: 'focus' },
+              { label: 'Austin TX', sub: 'based' },
+            ].map(({ label, sub }) => (
+              <div key={label} className="px-4 py-2 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
+                <span className="text-white font-semibold text-sm">{label}</span>
+                <span className="text-zinc-500 text-sm"> · {sub}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* CTA buttons */}
+          <div className="flex flex-wrap gap-3">
+            <a
+              href="https://linkedin.com/in/arvinpoole"
+              target="_blank"
+              onClick={() => trackEvent('outbound_click', { link_name: 'LinkedIn' })}
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-white text-black font-semibold text-sm hover:bg-zinc-100 transition-all"
+            >
+              <Link2 size={15} />
+              Connect on LinkedIn
+              <ArrowUpRight size={14} className="opacity-60" />
+            </a>
+            <button
+              onClick={() => trackEvent('resume_download')}
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-white/5 border border-white/10 text-white font-semibold text-sm hover:bg-white/10 transition-all backdrop-blur-sm"
+            >
+              <FileText size={15} className="text-zinc-400" />
+              Download Resume
+            </button>
+          </div>
+        </section>
+
+        {/* Case Studies */}
+        <section className="space-y-5 mb-8">
+          <div className="flex items-center gap-2 mb-8">
+            <BarChart2 size={16} className="text-emerald-400" />
+            <span className="text-zinc-500 text-sm font-medium uppercase tracking-widest">Case Studies</span>
+          </div>
+
+          {/* Case Study 1 */}
+          <article className="group rounded-3xl bg-white/[0.03] border border-white/10 backdrop-blur-sm p-8 hover:bg-white/[0.06] hover:border-white/20 transition-all duration-300">
+            <div className="flex items-start gap-4 mb-6">
+              <div className="shrink-0 w-10 h-10 rounded-2xl bg-emerald-500/15 border border-emerald-500/20 flex items-center justify-center">
+                <BarChart2 size={18} className="text-emerald-400" />
+              </div>
+              <div>
+                <h2 className="text-xl font-bold text-white">Lead Scoring & CRM Orchestration</h2>
+                <p className="text-zinc-500 text-sm mt-0.5">HubSpot · Salesforce · B2B SaaS</p>
+              </div>
+            </div>
+
+            <div className="space-y-5">
+              {[
+                {
+                  label: 'The Challenge',
+                  text: 'Silktide was transitioning from a sales-led, outbound-heavy motion to an inbound marketing engine. They needed a measurable qualification model that bridged marketing and sales, but the existing CRM architecture lacked the governance to support it.',
+                },
+                {
+                  label: 'The Execution',
+                  text: 'Instead of just assigning points to pageviews, I built the foundational CRM architecture first. I established strict lifecycle ownership rules where HubSpot owned scoring and the early lifecycle, while Salesforce owned SQLs and downstream stages. I designed and operationalized a 100-point B2B lead scoring model split between firmographic fit (40 points) and behavioral intent (60 points), then built a 36-task, seven-phase build plan for RevOps.',
+                },
+                {
+                  label: 'The Empirical Pivot',
+                  text: 'I pulled and analyzed 12 months of historical demo-requester data. The analysis revealed that 94% of conversions were single-touch events. I killed the planned multi-touch bonus weighting and adjusted thresholds to match where converters actually lived.',
+                },
+                {
+                  label: 'The Result',
+                  text: 'A fully operational, data-backed scoring engine that aligned marketing and sales around a single source of truth, eliminating disqualification noise and accelerating speed-to-lead for high-intent buyers.',
+                },
+              ].map(({ label, text }) => (
+                <div key={label}>
+                  <p className="text-emerald-400 text-sm font-semibold mb-1">{label}</p>
+                  <p className="text-zinc-400 text-sm leading-relaxed">{text}</p>
+                </div>
+              ))}
+            </div>
+          </article>
+
+          {/* Case Study 2 */}
+          <article className="group rounded-3xl bg-white/[0.03] border border-white/10 backdrop-blur-sm p-8 hover:bg-white/[0.06] hover:border-white/20 transition-all duration-300">
+            <div className="flex items-start gap-4 mb-6">
+              <div className="shrink-0 w-10 h-10 rounded-2xl bg-blue-500/15 border border-blue-500/20 flex items-center justify-center">
+                <Megaphone size={18} className="text-blue-400" />
+              </div>
+              <div>
+                <h2 className="text-xl font-bold text-white">Paid Media Architecture & Regulatory Agility</h2>
+                <p className="text-zinc-500 text-sm mt-0.5">LinkedIn Ads · Higher Education · ADA Compliance</p>
+              </div>
+            </div>
+
+            <div className="space-y-5">
+              {[
+                {
+                  label: 'The Challenge',
+                  text: 'A previous $1,220 LinkedIn campaign died in an algorithmic death spiral — conversion objective without enough volume to optimize. The business needed a functional acquisition engine for the U.S. Higher Education vertical using a public accessibility index of 945 universities.',
+                },
+                {
+                  label: 'The Execution',
+                  text: 'I designed a 10-day, $1,800 validation campaign targeting digital and accessibility leaders, switching the objective to Website Visits to prevent algorithmic throttling. I engineered the full measurement architecture: Insight Tag coverage, Conversions API deduplication, and precise UTM structures. I also wrote the creative briefs balancing an anti-corporate visual identity with authoritative framing for public-sector buyers.',
+                },
+                {
+                  label: 'The Regulatory Pivot',
+                  text: 'Mid-build, the DOJ issued an Interim Final Rule extending the ADA Title II deadline. I executed a surgical copy pivot — shifting from compliance fear to deadline-aware angles like "The DOJ delayed it. The lawsuits did not." Audience, budget, and tracking remained untouched.',
+                },
+                {
+                  label: 'The Result',
+                  text: 'A technically sound validation engine that tested the riskiest assumption (CTR on the Index hook) at low cost, protecting the team from wasting hours on a heavy 25-ad-set ABM build before the core message was proven.',
+                },
+              ].map(({ label, text }) => (
+                <div key={label}>
+                  <p className="text-emerald-400 text-sm font-semibold mb-1">{label}</p>
+                  <p className="text-zinc-400 text-sm leading-relaxed">{text}</p>
+                </div>
+              ))}
+            </div>
+          </article>
+
+          {/* Case Study 3 */}
+          <article className="group rounded-3xl bg-white/[0.03] border border-white/10 backdrop-blur-sm p-8 hover:bg-white/[0.06] hover:border-white/20 transition-all duration-300">
+            <div className="flex items-start gap-4 mb-6">
+              <div className="shrink-0 w-10 h-10 rounded-2xl bg-orange-500/15 border border-orange-500/20 flex items-center justify-center">
+                <Wrench size={18} className="text-orange-400" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h2 className="text-xl font-bold text-white">Active Build: GHL Pipeline Orchestration</h2>
+                  <span className="px-2 py-0.5 rounded-full bg-orange-500/15 border border-orange-500/20 text-orange-400 text-xs font-medium">In Progress</span>
+                </div>
+                <p className="text-zinc-500 text-sm mt-0.5">Go High Level · Life Insurance · CRM Automation</p>
+              </div>
+            </div>
+
+            <div className="space-y-5">
+              {[
+                {
+                  label: 'The Challenge',
+                  text: 'In the life insurance sector, speed-to-lead is the single biggest predictor of a closed policy. My client operates on a fragmented tech stack that causes lead decay. We need to consolidate their marketing and sales operations into a single environment and ruthlessly optimize follow-up in a cost-constrained environment.',
+                },
+                {
+                  label: 'The Blueprint',
+                  text: 'Migrating their entire lead management and sales architecture into Go High Level. Instead of porting old data, rebuilding the funnel logic from the ground up. Using Claude Code to script custom webhooks, API integrations, and backend logic. Engineering automated SMS and email sequences to trigger the second a lead hits the system, with conditional logic to route high-value policy inquiries directly to sales.',
+                },
+                {
+                  label: 'The Objective',
+                  text: 'A unified, fully automated GHL architecture that eliminates manual lead triage — guaranteeing immediate engagement with every prospect and setting the foundation for scalable, tracked experimentation.',
+                },
+              ].map(({ label, text }) => (
+                <div key={label}>
+                  <p className="text-emerald-400 text-sm font-semibold mb-1">{label}</p>
+                  <p className="text-zinc-400 text-sm leading-relaxed">{text}</p>
+                </div>
+              ))}
+            </div>
+          </article>
+        </section>
+
+        {/* Training Guide CTA */}
+        <div className="relative rounded-3xl overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 via-transparent to-blue-500/10" />
+          <div className="relative bg-white/[0.03] border border-white/10 backdrop-blur-sm rounded-3xl p-8">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+              <div className="flex items-start gap-4">
+                <div className="shrink-0 w-10 h-10 rounded-2xl bg-emerald-500/15 border border-emerald-500/20 flex items-center justify-center">
+                  <BookOpen size={18} className="text-emerald-400" />
+                </div>
+                <div>
+                  <p className="text-emerald-400 text-xs font-semibold uppercase tracking-widest mb-1">Free Resource</p>
+                  <h2 className="text-xl font-bold text-white mb-2">Build & Launch Your Website with AI</h2>
+                  <p className="text-zinc-400 text-sm leading-relaxed max-w-md">
+                    A step-by-step interactive guide to building and deploying your own website using
+                    Claude Code, VS Code, GitHub, and Vercel — no coding experience needed.
+                  </p>
+                </div>
+              </div>
+              <a
+                href="/build-and-launch-your-site"
+                onClick={() => trackEvent('outbound_click', { link_name: 'Build and Launch Guide' })}
+                className="shrink-0 inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-emerald-500 text-black font-semibold text-sm hover:bg-emerald-400 transition-all"
+              >
+                Start the guide
+                <ChevronRight size={15} />
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  )
 }
