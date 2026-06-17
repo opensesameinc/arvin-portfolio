@@ -267,7 +267,7 @@ export default function Home() {
                 style={glassPill}
               >
                 <MapPin size={13} className="text-emerald-400" />
-                Austin, TX · Open to Marketing Director & Head of Growth
+                MarTech · Revenue Architecture · Austin, TX
               </div>
 
               <h1 className="text-4xl md:text-5xl font-bold text-white mb-3 leading-[1.15]" style={{ fontFamily: 'var(--font-space-mono)', letterSpacing: '-0.02em' }}>
@@ -282,11 +282,11 @@ export default function Home() {
               </p>
 
               {/* Primary CTAs */}
-              <div className="flex flex-wrap gap-3">
+              <div className="flex flex-col sm:flex-row gap-3">
                 <a
                   href="/contact"
                   onClick={() => trackEvent('cta_click', { link_name: 'Contact' })}
-                  className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl text-white font-semibold text-sm transition-all hover:scale-[1.02]"
+                  className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl text-white font-semibold text-sm transition-all hover:scale-[1.02]"
                   style={{
                     background: 'linear-gradient(135deg, #34d399 0%, #10b981 60%, #059669 100%)',
                     boxShadow: '0 6px 24px rgba(16,185,129,0.45), inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -1px 0 rgba(0,0,0,0.15)',
@@ -300,7 +300,7 @@ export default function Home() {
                   href="https://linkedin.com/in/arvinpoole"
                   target="_blank"
                   onClick={() => trackEvent('outbound_click', { link_name: 'LinkedIn' })}
-                  className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl text-black font-semibold text-sm transition-all hover:scale-[1.02]"
+                  className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl text-black font-semibold text-sm transition-all hover:scale-[1.02]"
                   style={{
                     background: 'linear-gradient(135deg, #ffffff 0%, #d1d5db 100%)',
                     boxShadow: '0 4px 20px rgba(255,255,255,0.18), inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -1px 0 rgba(0,0,0,0.08)',
@@ -312,7 +312,7 @@ export default function Home() {
                 </a>
                 <button
                   onClick={() => trackEvent('resume_download')}
-                  className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl text-white font-semibold text-sm transition-all border border-white/[0.15] hover:scale-[1.02]"
+                  className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl text-white font-semibold text-sm transition-all border border-white/[0.15] hover:scale-[1.02]"
                   style={{
                     background: 'linear-gradient(145deg, rgba(255,255,255,0.12), rgba(255,255,255,0.03))',
                     boxShadow: '0 4px 16px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.18), inset 0 -1px 0 rgba(0,0,0,0.2)',
