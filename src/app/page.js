@@ -1,18 +1,15 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import {
   ArrowUpRight,
   MapPin,
   BarChart2,
-  Megaphone,
-  Wrench,
-  BookOpen,
+  Briefcase,
   ChevronRight,
   Link2,
   FileText,
-  Briefcase,
   Mail,
 } from 'lucide-react'
 
@@ -28,58 +25,37 @@ const glassCard = {
   WebkitBackdropFilter: 'blur(24px)',
 }
 
+const CardShine = () => (
+  <div
+    className="absolute inset-0 rounded-3xl pointer-events-none"
+    style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.07) 0%, transparent 38%)' }}
+  />
+)
+
 const NAV_BLOCKS = [
   {
     href: '/case-studies',
     icon: BarChart2,
-    color: 'emerald',
     title: 'Case Studies',
     desc: 'CRM orchestration, paid media architecture, and live pipeline builds.',
     iconStyle: {
       background: 'linear-gradient(135deg, rgba(52,211,153,0.3) 0%, rgba(16,185,129,0.1) 100%)',
       boxShadow: '0 4px 14px rgba(52,211,153,0.2), inset 0 1px 0 rgba(255,255,255,0.2)',
+      borderColor: 'rgba(52,211,153,0.25)',
     },
-    borderColor: 'rgba(52,211,153,0.25)',
     iconClass: 'text-emerald-400',
   },
   {
     href: '/career',
     icon: Briefcase,
-    color: 'blue',
     title: 'Career',
-    desc: '15+ years across B2B SaaS, high-CAC verticals, and growth leadership.',
+    desc: '35+ years across enterprise architecture, B2B SaaS, and growth leadership.',
     iconStyle: {
       background: 'linear-gradient(135deg, rgba(96,165,250,0.3) 0%, rgba(59,130,246,0.1) 100%)',
       boxShadow: '0 4px 14px rgba(96,165,250,0.2), inset 0 1px 0 rgba(255,255,255,0.2)',
+      borderColor: 'rgba(96,165,250,0.25)',
     },
-    borderColor: 'rgba(96,165,250,0.25)',
     iconClass: 'text-blue-400',
-  },
-  {
-    href: '/build-and-launch-your-site',
-    icon: BookOpen,
-    color: 'violet',
-    title: 'Build & Launch Guide',
-    desc: 'Step-by-step: build and deploy your own site with AI. No code needed.',
-    iconStyle: {
-      background: 'linear-gradient(135deg, rgba(167,139,250,0.3) 0%, rgba(139,92,246,0.1) 100%)',
-      boxShadow: '0 4px 14px rgba(167,139,250,0.2), inset 0 1px 0 rgba(255,255,255,0.2)',
-    },
-    borderColor: 'rgba(167,139,250,0.25)',
-    iconClass: 'text-violet-400',
-  },
-  {
-    href: '/contact',
-    icon: Mail,
-    color: 'orange',
-    title: 'Contact',
-    desc: 'Open to Marketing Director and Head of Growth opportunities.',
-    iconStyle: {
-      background: 'linear-gradient(135deg, rgba(251,146,60,0.3) 0%, rgba(249,115,22,0.1) 100%)',
-      boxShadow: '0 4px 14px rgba(251,146,60,0.2), inset 0 1px 0 rgba(255,255,255,0.2)',
-    },
-    borderColor: 'rgba(251,146,60,0.25)',
-    iconClass: 'text-orange-400',
   },
 ]
 
@@ -123,7 +99,7 @@ function TiltCard({ children, className, style, href }) {
     el.style.transform = `perspective(800px) rotateX(${-y * 8}deg) rotateY(${x * 8}deg) scale(1.02)`
   }
 
-  const onLeave = (e) => {
+  const onLeave = () => {
     const el = ref.current
     if (!el) return
     el.style.transform = 'perspective(800px) rotateX(0deg) rotateY(0deg) scale(1)'
@@ -137,12 +113,90 @@ function TiltCard({ children, className, style, href }) {
       ref={ref}
       {...props}
       className={className}
-      style={{ ...style, transition: 'transform 0.15s ease, box-shadow 0.15s ease', willChange: 'transform' }}
+      style={{ ...style, transition: 'transform 0.15s ease', willChange: 'transform' }}
       onMouseMove={onMove}
       onMouseLeave={onLeave}
     >
       {children}
     </Tag>
+  )
+}
+
+function LeadForm() {
+  const [firstName, setFirstName] = useState('')
+  const [email, setEmail] = useState('')
+  const [status, setStatus] = useState('idle')
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setStatus('loading')
+    try {
+      const res = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, firstName }),
+      })
+      setStatus(res.ok ? 'success' : 'error')
+      if (res.ok) { setFirstName(''); setEmail('') }
+    } catch {
+      setStatus('error')
+    }
+  }
+
+  if (status === 'success') {
+    return (
+      <div className="flex items-center gap-3 py-2">
+        <div
+          className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
+          style={{ background: 'rgba(52,211,153,0.15)', border: '1px solid rgba(52,211,153,0.25)' }}
+        >
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M2 7l4 4 6-7" stroke="#34d399" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </div>
+        <div>
+          <p className="text-white font-semibold text-sm">You're in.</p>
+          <p className="text-zinc-500 text-xs">Check your inbox for the guide.</p>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <div className="flex flex-col sm:flex-row gap-2 mb-2">
+        <input
+          type="text"
+          placeholder="First name"
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+          className="flex-1 px-4 py-3 rounded-xl text-sm text-white placeholder-zinc-600 outline-none transition-colors"
+          style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)' }}
+        />
+        <input
+          type="email"
+          placeholder="Email address"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          className="flex-1 px-4 py-3 rounded-xl text-sm text-white placeholder-zinc-600 outline-none transition-colors"
+          style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)' }}
+        />
+        <button
+          type="submit"
+          disabled={status === 'loading'}
+          className="sm:shrink-0 px-6 py-3 rounded-xl text-white font-semibold text-sm transition-all hover:scale-[1.02] disabled:opacity-50 whitespace-nowrap"
+          style={{
+            background: 'linear-gradient(135deg, #34d399 0%, #10b981 60%, #059669 100%)',
+            boxShadow: '0 6px 24px rgba(16,185,129,0.45), inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -1px 0 rgba(0,0,0,0.15)',
+          }}
+        >
+          {status === 'loading' ? 'Sending...' : 'Get the guide →'}
+        </button>
+      </div>
+      {status === 'error' && <p className="text-red-400 text-xs mt-1">Something went wrong. Try again.</p>}
+      <p className="text-zinc-600 text-xs mt-2">No spam. Unsubscribe anytime.</p>
+    </form>
   )
 }
 
@@ -157,17 +211,9 @@ export default function Home() {
     const animate = () => {
       const mx = mouse.current.x
       const my = mouse.current.y
-
-      if (orb1Ref.current) {
-        orb1Ref.current.style.transform = `translate(${(mx - 0.5) * -60}px, ${(my - 0.5) * -40}px)`
-      }
-      if (orb2Ref.current) {
-        orb2Ref.current.style.transform = `translate(${(mx - 0.5) * 50}px, ${(my - 0.5) * 35}px)`
-      }
-      if (photoRef.current) {
-        photoRef.current.style.transform = `translate(${(mx - 0.5) * -12}px, ${(my - 0.5) * -8}px)`
-      }
-
+      if (orb1Ref.current) orb1Ref.current.style.transform = `translate(${(mx - 0.5) * -60}px, ${(my - 0.5) * -40}px)`
+      if (orb2Ref.current) orb2Ref.current.style.transform = `translate(${(mx - 0.5) * 50}px, ${(my - 0.5) * 35}px)`
+      if (photoRef.current) photoRef.current.style.transform = `translate(${(mx - 0.5) * -12}px, ${(my - 0.5) * -8}px)`
       rafId.current = requestAnimationFrame(animate)
     }
     rafId.current = requestAnimationFrame(animate)
@@ -183,53 +229,34 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-zinc-950 relative overflow-hidden">
 
-      {/* Background orbs — parallax with mouse */}
+      {/* Background orbs */}
       <div className="pointer-events-none fixed inset-0 z-0">
         <div
           ref={orb1Ref}
           className="absolute top-[-15%] left-[5%] w-[700px] h-[700px] rounded-full"
-          style={{
-            background: 'radial-gradient(circle, rgba(52,211,153,0.14) 0%, transparent 70%)',
-            filter: 'blur(80px)',
-            transition: 'transform 0.1s linear',
-          }}
+          style={{ background: 'radial-gradient(circle, rgba(52,211,153,0.14) 0%, transparent 70%)', filter: 'blur(80px)', transition: 'transform 0.1s linear' }}
         />
         <div
           ref={orb2Ref}
           className="absolute bottom-[-10%] right-[0%] w-[600px] h-[600px] rounded-full"
-          style={{
-            background: 'radial-gradient(circle, rgba(59,130,246,0.1) 0%, transparent 70%)',
-            filter: 'blur(80px)',
-            transition: 'transform 0.1s linear',
-          }}
+          style={{ background: 'radial-gradient(circle, rgba(59,130,246,0.1) 0%, transparent 70%)', filter: 'blur(80px)', transition: 'transform 0.1s linear' }}
         />
       </div>
 
       <main className="relative z-10 max-w-4xl mx-auto px-6 py-20">
 
         {/* Hero */}
-        <section className="mb-20">
-          <div className="flex flex-col md:flex-row md:items-center gap-10 mb-12">
+        <section className="mb-14">
+          <div className="flex flex-col md:flex-row md:items-center gap-10 mb-10">
 
             {/* Photo */}
             <div ref={photoRef} className="shrink-0 self-start md:self-center" style={{ willChange: 'transform', transition: 'transform 0.1s linear' }}>
               <div
                 className="relative w-32 h-32 md:w-40 md:h-40 rounded-full"
-                style={{
-                  boxShadow: '0 0 0 1px rgba(255,255,255,0.15), 0 0 0 4px rgba(52,211,153,0.12), 0 20px 60px rgba(0,0,0,0.6)',
-                }}
+                style={{ boxShadow: '0 0 0 1px rgba(255,255,255,0.15), 0 0 0 4px rgba(52,211,153,0.12), 0 20px 60px rgba(0,0,0,0.6)' }}
               >
-                <div
-                  className="absolute inset-0 rounded-full z-10 pointer-events-none"
-                  style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.08) 0%, transparent 50%)', borderRadius: '50%' }}
-                />
-                <Image
-                  src="/arvin.png"
-                  alt="Arvin Poole"
-                  fill
-                  className="rounded-full object-cover object-top"
-                  priority
-                />
+                <div className="absolute inset-0 rounded-full z-10 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.08) 0%, transparent 50%)' }} />
+                <Image src="/arvin.png" alt="Arvin Poole" fill className="rounded-full object-cover object-top" priority />
               </div>
             </div>
 
@@ -249,91 +276,125 @@ export default function Home() {
                 <span className="block">MarTech Architect</span>
               </h1>
 
-              <p className="text-base text-zinc-400 leading-relaxed max-w-xl">
+              <p className="text-base text-zinc-400 leading-relaxed max-w-xl mb-6">
                 I build data-driven acquisition engines, orchestrate complex CRM infrastructures,
                 and drive measurable pipeline growth for B2B SaaS and high-CAC industries.
               </p>
+
+              {/* Primary CTAs */}
+              <div className="flex flex-wrap gap-3">
+                <a
+                  href="/contact"
+                  onClick={() => trackEvent('cta_click', { link_name: 'Contact' })}
+                  className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl text-white font-semibold text-sm transition-all hover:scale-[1.02]"
+                  style={{
+                    background: 'linear-gradient(135deg, #34d399 0%, #10b981 60%, #059669 100%)',
+                    boxShadow: '0 6px 24px rgba(16,185,129,0.45), inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -1px 0 rgba(0,0,0,0.15)',
+                  }}
+                >
+                  <Mail size={15} />
+                  Get in touch
+                  <ArrowUpRight size={14} className="opacity-70" />
+                </a>
+                <a
+                  href="https://linkedin.com/in/arvinpoole"
+                  target="_blank"
+                  onClick={() => trackEvent('outbound_click', { link_name: 'LinkedIn' })}
+                  className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl text-black font-semibold text-sm transition-all hover:scale-[1.02]"
+                  style={{
+                    background: 'linear-gradient(135deg, #ffffff 0%, #d1d5db 100%)',
+                    boxShadow: '0 4px 20px rgba(255,255,255,0.18), inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -1px 0 rgba(0,0,0,0.08)',
+                  }}
+                >
+                  <Link2 size={15} />
+                  LinkedIn
+                  <ArrowUpRight size={14} className="opacity-60" />
+                </a>
+                <button
+                  onClick={() => trackEvent('resume_download')}
+                  className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl text-white font-semibold text-sm transition-all border border-white/[0.15] hover:scale-[1.02]"
+                  style={{
+                    background: 'linear-gradient(145deg, rgba(255,255,255,0.12), rgba(255,255,255,0.03))',
+                    boxShadow: '0 4px 16px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.18), inset 0 -1px 0 rgba(0,0,0,0.2)',
+                  }}
+                >
+                  <FileText size={15} className="text-zinc-400" />
+                  Resume
+                </button>
+              </div>
             </div>
           </div>
 
           {/* Stat pills */}
-          <div className="flex flex-wrap gap-3 mb-8">
+          <div className="flex flex-wrap gap-3">
             {[
               { label: '15+ years', sub: 'experience' },
               { label: 'B2B SaaS', sub: 'focus' },
               { label: 'Austin TX', sub: 'based' },
             ].map(({ label, sub }) => (
-              <div
-                key={label}
-                className="px-4 py-2 rounded-2xl border border-white/[0.15]"
-                style={glassPill}
-              >
+              <div key={label} className="px-4 py-2 rounded-2xl border border-white/[0.15]" style={glassPill}>
                 <span className="text-white font-semibold text-sm">{label}</span>
                 <span className="text-zinc-500 text-sm"> · {sub}</span>
               </div>
             ))}
           </div>
+        </section>
 
-          {/* CTA buttons */}
-          <div className="flex flex-wrap gap-3">
-            <a
-              href="https://linkedin.com/in/arvinpoole"
-              target="_blank"
-              onClick={() => trackEvent('outbound_click', { link_name: 'LinkedIn' })}
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl text-black font-semibold text-sm transition-all hover:scale-[1.02]"
-              style={{
-                background: 'linear-gradient(135deg, #ffffff 0%, #d1d5db 100%)',
-                boxShadow: '0 4px 20px rgba(255,255,255,0.18), inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -1px 0 rgba(0,0,0,0.08)',
-              }}
-            >
-              <Link2 size={15} />
-              Connect on LinkedIn
-              <ArrowUpRight size={14} className="opacity-60" />
-            </a>
-            <button
-              onClick={() => trackEvent('resume_download')}
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl text-white font-semibold text-sm transition-all border border-white/[0.15] hover:scale-[1.02]"
-              style={{
-                background: 'linear-gradient(145deg, rgba(255,255,255,0.12), rgba(255,255,255,0.03))',
-                boxShadow: '0 4px 16px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.18), inset 0 -1px 0 rgba(0,0,0,0.2)',
-              }}
-            >
-              <FileText size={15} className="text-zinc-400" />
-              Download Resume
-            </button>
+        {/* Lead magnet */}
+        <section className="mb-14">
+          <div
+            className="rounded-3xl p-8 relative overflow-hidden border"
+            style={{
+              ...glassCard,
+              borderColor: 'rgba(52,211,153,0.2)',
+              background: 'linear-gradient(145deg, rgba(52,211,153,0.08) 0%, rgba(255,255,255,0.04) 50%, rgba(59,130,246,0.06) 100%)',
+            }}
+          >
+            <CardShine />
+            <div className="relative">
+              <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6 mb-6">
+                <div>
+                  <p className="text-emerald-400 text-xs font-semibold uppercase tracking-widest mb-2">Free Resource</p>
+                  <h2 className="text-2xl font-bold text-white mb-2">Build & Launch Your Site with AI</h2>
+                  <p className="text-zinc-400 text-sm leading-relaxed max-w-lg">
+                    Get the step-by-step guide to building and deploying your own website using
+                    Claude Code, VS Code, GitHub, and Vercel — no coding experience needed.
+                    Plus MarTech insights and growth frameworks straight to your inbox.
+                  </p>
+                </div>
+                <a
+                  href="/build-and-launch-your-site"
+                  className="shrink-0 self-start text-zinc-500 hover:text-zinc-300 text-xs underline underline-offset-4 whitespace-nowrap transition-colors mt-1"
+                >
+                  Preview the guide ↗
+                </a>
+              </div>
+              <LeadForm />
+            </div>
           </div>
         </section>
 
-        {/* Navigation hub */}
+        {/* Explore */}
         <section>
-          <div className="flex items-center gap-2 mb-6">
+          <div className="flex items-center gap-4 mb-6">
             <div className="h-px flex-1" style={{ background: 'linear-gradient(90deg, rgba(255,255,255,0.08), transparent)' }} />
             <span className="text-zinc-600 text-xs font-medium uppercase tracking-widest">Explore</span>
             <div className="h-px flex-1" style={{ background: 'linear-gradient(270deg, rgba(255,255,255,0.08), transparent)' }} />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {NAV_BLOCKS.map(({ href, icon: Icon, title, desc, iconStyle, borderColor, iconClass }) => (
+            {NAV_BLOCKS.map(({ href, icon: Icon, title, desc, iconStyle, iconClass }) => (
               <TiltCard
                 key={href}
                 href={href}
                 className="group block rounded-3xl p-6 relative overflow-hidden border border-white/[0.12] no-underline"
                 style={glassCard}
               >
-                {/* Top shine */}
-                <div
-                  className="absolute inset-0 rounded-3xl pointer-events-none"
-                  style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.07) 0%, transparent 38%)' }}
-                />
-
+                <div className="absolute inset-0 rounded-3xl pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.07) 0%, transparent 38%)' }} />
                 <div className="relative flex items-start gap-4">
-                  <div
-                    className="shrink-0 w-11 h-11 rounded-2xl flex items-center justify-center border"
-                    style={{ ...iconStyle, borderColor }}
-                  >
+                  <div className="shrink-0 w-11 h-11 rounded-2xl flex items-center justify-center border" style={iconStyle}>
                     <Icon size={20} className={iconClass} />
                   </div>
-
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between gap-2 mb-1">
                       <h2 className="text-white font-bold text-base">{title}</h2>
