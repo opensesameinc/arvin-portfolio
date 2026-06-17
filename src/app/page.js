@@ -113,6 +113,27 @@ export default function Home() {
         </article>
 
       </div>
+
+      {/* Client Training Guide */}
+      <section className="mt-16 p-8 border border-zinc-800 bg-zinc-900/50 rounded-lg">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+          <div>
+            <p className="text-emerald-500 text-sm font-semibold uppercase tracking-widest mb-2">Free Resource</p>
+            <h2 className="text-2xl font-bold text-white mb-3">Build & Launch Your Website with AI</h2>
+            <p className="text-zinc-400 max-w-xl">
+              A step-by-step interactive guide for building and deploying your own website using Claude Code, VS Code, GitHub, and Vercel — no coding experience needed.
+            </p>
+          </div>
+          <a
+            href="/build-and-launch-your-site"
+            onClick={() => trackEvent('outbound_click', { link_name: 'Build and Launch Guide' })}
+            className="shrink-0 px-6 py-3 bg-emerald-500 text-black font-semibold rounded hover:bg-emerald-400 transition-colors text-center"
+          >
+            Start the guide →
+          </a>
+        </div>
+      </section>
+
     </main>
   );
 }
