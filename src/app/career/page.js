@@ -29,7 +29,7 @@ const ROLES = [
   {
     company: 'Silktide',
     location: 'Austin, TX',
-    title: 'Fractional Domain Architecture Lead, Marketing Technology',
+    title: 'Growth Marketing Manager, Marketing Technology',
     dates: 'Jan 2026 – May 2026',
     dot: 'emerald',
     bullets: [
