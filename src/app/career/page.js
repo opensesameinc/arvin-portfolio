@@ -54,7 +54,7 @@ const ROLES = [
   {
     company: 'Vendidit',
     location: 'Austin, TX',
-    title: 'Fractional CMO & Technology Strategist',
+    title: 'Fractional Head of Growth',
     dates: 'Jul 2024 – Oct 2024',
     dot: 'blue',
     bullets: [
