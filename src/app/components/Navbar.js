@@ -21,12 +21,16 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  const visibleLinks = LINKS.filter(({ href }) => href !== pathname)
+
+  if (visibleLinks.length === 0) return null
+
   return (
     <div className="fixed top-0 left-0 right-0 z-50 flex justify-center pointer-events-none">
       <nav
         className="pointer-events-auto flex items-center gap-1 rounded-full border border-white/[0.15] px-2 py-2 transition-all duration-500 ease-out"
         style={{
-          marginTop: scrolled ? '12px' : '20px',
+          marginTop: scrolled ? '20px' : '32px',
           background: scrolled
             ? 'linear-gradient(145deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0.09) 100%)'
             : 'linear-gradient(145deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.03) 50%, rgba(255,255,255,0.06) 100%)',
@@ -37,29 +41,15 @@ export default function Navbar() {
           WebkitBackdropFilter: scrolled ? 'blur(32px)' : 'blur(20px)',
         }}
       >
-        {LINKS.map(({ href, label }) => {
-          const active = pathname === href
-          return (
-            <Link
-              key={href}
-              href={href}
-              className="relative px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-300"
-              style={
-                active
-                  ? {
-                      color: '#fff',
-                      background: 'linear-gradient(145deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.06) 100%)',
-                      boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.25), inset 0 -1px 0 rgba(0,0,0,0.15), 0 2px 8px rgba(0,0,0,0.3)',
-                    }
-                  : {
-                      color: 'rgba(161,161,170,1)',
-                    }
-              }
-            >
-              {label}
-            </Link>
-          )
-        })}
+        {visibleLinks.map(({ href, label }) => (
+          <Link
+            key={href}
+            href={href}
+            className="px-4 py-1.5 rounded-full text-sm font-medium text-zinc-400 hover:text-white transition-all duration-200"
+          >
+            {label}
+          </Link>
+        ))}
       </nav>
     </div>
   )
