@@ -65,7 +65,7 @@ const ROLES = [
   {
     company: 'Buildxact & Genesis Digital',
     location: 'Remote',
-    title: 'Operations & Systems Director',
+    title: 'Director of Growth and Demand Generation',
     dates: 'Dec 2022 – May 2024',
     dot: 'blue',
     bullets: [
