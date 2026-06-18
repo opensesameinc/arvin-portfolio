@@ -69,7 +69,7 @@ export default function Contact() {
       const res = await fetch('/api/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, firstName }),
+        body: JSON.stringify({ email, firstName, formId: 'newsletter' }),
       })
       if (res.ok) {
         setStatus('success')

@@ -1,13 +1,17 @@
 export async function POST(request) {
   try {
-    const { email, firstName } = await request.json()
+    const { email, firstName, formId } = await request.json()
 
     if (!email) {
       return Response.json({ error: 'Email is required' }, { status: 400 })
     }
 
+    const resolvedFormId = formId === 'newsletter'
+      ? process.env.KIT_FORM_ID_NEWSLETTER
+      : process.env.KIT_FORM_ID
+
     const res = await fetch(
-      `https://api.convertkit.com/v3/forms/${process.env.KIT_FORM_ID}/subscribe`,
+      `https://api.convertkit.com/v3/forms/${resolvedFormId}/subscribe`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
