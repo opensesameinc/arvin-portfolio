@@ -135,8 +135,16 @@ function LeadForm() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, firstName }),
       })
-      setStatus(res.ok ? 'success' : 'error')
-      if (res.ok) { setFirstName(''); setEmail('') }
+      if (res.ok) {
+        setStatus('success')
+        setFirstName('')
+        setEmail('')
+        if (typeof window !== 'undefined' && window.dataLayer) {
+          window.dataLayer.push({ event: 'guide_signup', method: 'email' })
+        }
+      } else {
+        setStatus('error')
+      }
     } catch {
       setStatus('error')
     }
