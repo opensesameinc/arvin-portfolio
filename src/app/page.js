@@ -245,7 +245,7 @@ export default function Home() {
         />
       </div>
 
-      <main className="relative z-10 max-w-4xl mx-auto px-6 py-20">
+      <main className="relative z-10 max-w-4xl mx-auto px-6 pt-28 pb-20">
 
         {/* Hero */}
         <section className="mb-14">

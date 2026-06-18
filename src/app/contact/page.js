@@ -98,13 +98,9 @@ export default function Contact() {
         />
       </div>
 
-      <main className="relative z-10 max-w-lg mx-auto px-6 py-20">
+      <main className="relative z-10 max-w-lg mx-auto px-6 pt-28 pb-20">
 
         {/* Back */}
-        <Link href="/" className="inline-flex items-center gap-2 text-zinc-500 hover:text-zinc-300 text-sm mb-10 transition-colors">
-          <ArrowLeft size={14} />
-          Back to Home
-        </Link>
 
         {/* Header */}
         <div className="mb-10">
