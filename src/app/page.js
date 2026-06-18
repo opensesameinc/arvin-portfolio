@@ -264,14 +264,6 @@ export default function Home() {
 
             {/* Text */}
             <div>
-              <div
-                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-zinc-300 text-sm mb-5 border border-white/[0.15]"
-                style={glassPill}
-              >
-                <MapPin size={13} className="text-emerald-400" />
-                MarTech · Revenue Architecture · Austin, TX
-              </div>
-
               <h1 className="text-4xl md:text-5xl font-bold text-white mb-3 leading-[1.15]" style={{ fontFamily: 'var(--font-space-mono)', letterSpacing: '-0.02em' }}>
                 Arvin Poole
                 <span className="block text-emerald-400">Enterprise Revenue &</span>
