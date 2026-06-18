@@ -1,6 +1,5 @@
 import "./globals.css";
 import { Space_Mono } from "next/font/google";
-import Navbar from "./components/Navbar";
 
 const spaceMono = Space_Mono({
   subsets: ["latin"],
@@ -30,7 +29,6 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body className={`${spaceMono.variable} bg-zinc-950 text-zinc-300 font-sans antialiased`}>
-        <Navbar />
         <noscript>
           <iframe
             src="https://www.googletagmanager.com/ns.html?id=GTM-MPF8P92"

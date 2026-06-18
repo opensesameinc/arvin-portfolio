@@ -103,7 +103,7 @@ export default function Contact() {
         {/* Back */}
         <Link href="/" className="inline-flex items-center gap-2 text-zinc-500 hover:text-zinc-300 text-sm mb-10 transition-colors">
           <ArrowLeft size={14} />
-          Back
+          Back to Home
         </Link>
 
         {/* Header */}
