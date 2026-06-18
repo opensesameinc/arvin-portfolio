@@ -9,7 +9,6 @@ import {
   Briefcase,
   ChevronRight,
   Link2,
-  FileText,
   Mail,
 } from 'lucide-react'
 
@@ -304,17 +303,6 @@ export default function Home() {
                   LinkedIn
                   <ArrowUpRight size={14} className="opacity-60" />
                 </a>
-                <button
-                  onClick={() => trackEvent('resume_download')}
-                  className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl text-white font-semibold text-sm transition-all border border-white/[0.15] hover:scale-[1.02]"
-                  style={{
-                    background: 'linear-gradient(145deg, rgba(255,255,255,0.12), rgba(255,255,255,0.03))',
-                    boxShadow: '0 4px 16px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.18), inset 0 -1px 0 rgba(0,0,0,0.2)',
-                  }}
-                >
-                  <FileText size={15} className="text-zinc-400" />
-                  Resume
-                </button>
               </div>
             </div>
           </div>
