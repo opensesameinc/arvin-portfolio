@@ -140,7 +140,7 @@ function LeadForm() {
         setFirstName('')
         setEmail('')
         if (typeof window !== 'undefined' && window.dataLayer) {
-          window.dataLayer.push({ event: 'guide_signup', method: 'email' })
+          window.dataLayer.push({ event: 'ai_site_guide_signup', method: 'email' })
         }
       } else {
         setStatus('error')
