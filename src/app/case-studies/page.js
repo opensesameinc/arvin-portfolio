@@ -52,12 +52,12 @@ const CASES = [
     iconClass: 'text-violet-400',
     title: 'Enterprise Platform Migration: Marketo → Iterable',
     stack: 'National Healthcare Screening Provider · B2C Retention · HIPAA Environment',
-    snippet: 'Replaced a B2B-architected platform throttling a high-volume B2C revenue engine — ~$134K in annual savings, 3+ net-new channels, and zero revenue disruption across a live, revenue-critical cutover.',
+    snippet: 'Replaced a B2B-architected platform throttling a high-volume B2C revenue engine. ~$134K in annual savings, 3+ net-new channels, and zero revenue disruption across a live, revenue-critical cutover.',
     metrics: [
       { value: '~$134K', label: 'annual cost reduction' },
       { value: '50%', label: 'of revenue protected' },
       { value: '0', label: 'unscheduled downtime' },
-      { value: '3+', label: 'net-new channels unlocked' },
+      { value: '3+', label: 'net-new channels added' },
     ],
     sections: [
       {
@@ -66,7 +66,7 @@ const CASES = [
       },
       {
         label: 'The Architecture Decision',
-        text: "After evaluating the full vendor landscape, I selected Iterable on three criteria: a schema-less JSON data model that mapped marketing logic directly without forcing transactional data into relational fields; multi-channel capability (Email + SMS + Push) that Marketo couldn't offer; and scaling-based pricing I could tie to business milestones. I structured a 2-year locked contract with growth tiers built in — 4.5M to 5.5M profiles, 540M to 660M sends — so spend tracked with business growth, not vendor leverage.",
+        text: "After evaluating every vendor, I selected Iterable on three criteria: a schema-less JSON data model that mapped marketing logic directly without forcing transactional data into relational fields; multi-channel capability (Email + SMS + Push) that Marketo couldn't offer; and scaling-based pricing I could tie to business milestones. I structured a 2-year locked contract with growth tiers built in: 4.5M to 5.5M profiles, 540M to 660M sends. Spend tracked with business growth, not vendor leverage.",
       },
       {
         label: 'The Vendor Strategy',
@@ -74,11 +74,11 @@ const CASES = [
       },
       {
         label: 'The Execution',
-        text: "I retained the proprietary HIPAA-compliant CRM as the system of record throughout — PHI was never ungoverned during the dual-platform period. I upgraded identity resolution from fragile email + first-name deduplication to deterministic UUID via the CRM's internal ID. I flattened Marketo's nested custom objects into optimized JSON payloads at the API perimeter. A phased 45-day IP warmup preceded a full parallel dual-run cutover — both platforms live and validated simultaneously — before sunsetting Marketo on schedule in March 2023.",
+        text: "I retained the proprietary HIPAA-compliant CRM as the system of record throughout. PHI was never ungoverned during the dual-platform period. I upgraded identity resolution from fragile email + first-name deduplication to deterministic UUID via the CRM's internal ID. I flattened Marketo's nested custom objects into optimized JSON payloads at the API perimeter. A phased 45-day IP warmup preceded a full parallel dual-run cutover, both platforms live and validated simultaneously, before sunsetting Marketo on schedule in March 2023.",
       },
       {
         label: 'The Result',
-        text: '~$134K lower annual platform cost (36% reduction vs. Marketo run-rate). Zero unscheduled downtime — the email channel responsible for 50% of company revenue was never interrupted. Added 1.5M profile capacity (4.0M → 5.5M) and unlocked SMS, mobile push, web push, and in-app as net-new channels. Delivered on schedule.',
+        text: '~$134K lower annual platform cost (36% reduction vs. Marketo run-rate). Zero unscheduled downtime. The email channel responsible for 50% of company revenue was never interrupted. Added 1.5M profile capacity (4.0M → 5.5M) and opened SMS, mobile push, web push, and in-app as net-new channels. Delivered on schedule.',
       },
     ],
   },
@@ -89,11 +89,11 @@ const CASES = [
     iconClass: 'text-emerald-400',
     title: 'Lead Scoring & CRM Orchestration',
     stack: 'B2B SaaS Platform · HubSpot · Salesforce',
-    snippet: 'Built a 100-point B2B lead scoring model on top of a fully restructured CRM architecture — then used 12 months of empirical data to kill an assumption and simplify the model before it shipped.',
+    snippet: 'Built a 100-point B2B lead scoring model on top of a fully restructured CRM architecture, then used 12 months of empirical data to kill an assumption and simplify the model before it shipped.',
     sections: [
       {
         label: 'The Challenge',
-        text: "A B2B SaaS platform was transitioning from a sales-led, outbound-heavy motion to an inbound marketing engine. They needed a measurable qualification model bridging marketing and sales, but the existing CRM architecture lacked the governance to support it — HubSpot and Salesforce operated as parallel systems with no clear lifecycle ownership.",
+        text: "A B2B SaaS platform was transitioning from a sales-led, outbound-heavy motion to an inbound marketing engine. They needed a measurable qualification model bridging marketing and sales, but the existing CRM architecture lacked the governance to support it. HubSpot and Salesforce operated as parallel systems with no clear lifecycle ownership.",
       },
       {
         label: 'The Architecture First',
@@ -105,7 +105,7 @@ const CASES = [
       },
       {
         label: 'The Empirical Pivot',
-        text: "I pulled and analyzed 12 months of historical demo-requester data before the model went live. The analysis revealed that 94% of conversions were single-touch events — which killed the planned multi-touch bonus weighting entirely. I adjusted thresholds to match where converters actually lived in the data, not where theory said they should.",
+        text: "I pulled and analyzed 12 months of historical demo-requester data before the model went live. The analysis revealed that 94% of conversions were single-touch events, which killed the planned multi-touch bonus weighting entirely. I adjusted thresholds to match where converters actually lived in the data, not where theory said they should.",
       },
       {
         label: 'The Result',
@@ -120,27 +120,27 @@ const CASES = [
     iconClass: 'text-blue-400',
     title: 'Paid Media Architecture & Regulatory Agility',
     stack: 'Higher Education Vertical · LinkedIn Ads · ADA Compliance',
-    snippet: 'Designed a $1,800 validation campaign that rescued a dying LinkedIn strategy — then executed a surgical copy pivot mid-build when the DOJ moved the compliance deadline.',
+    snippet: 'Designed a $1,800 validation campaign that rescued a dying LinkedIn strategy, then executed a surgical copy pivot mid-build when the DOJ moved the compliance deadline.',
     sections: [
       {
         label: 'The Challenge',
-        text: 'A previous $1,220 LinkedIn campaign had died in an algorithmic death spiral — a conversion objective without enough volume to optimize. The business needed a functional acquisition engine for the U.S. Higher Education vertical using a public accessibility index of 945 universities, without repeating the same structural error.',
+        text: 'A previous $1,220 LinkedIn campaign had died in an algorithmic death spiral: a conversion objective without enough volume to optimize. The business needed a functional acquisition engine for the U.S. Higher Education vertical using a public accessibility index of 945 universities, without repeating the same structural error.',
       },
       {
         label: 'The Campaign Architecture',
-        text: 'I designed a 10-day, $1,800 validation campaign targeting digital and accessibility leaders, switching the objective to Website Visits to prevent algorithmic throttling. I engineered the full measurement stack: Insight Tag coverage, Conversions API deduplication, and precise UTM structures — so every click was attributable before a dollar of spend was committed.',
+        text: 'I designed a 10-day, $1,800 validation campaign targeting digital and accessibility leaders, switching the objective to Website Visits to prevent algorithmic throttling. I engineered the full measurement stack: Insight Tag coverage, Conversions API deduplication, and precise UTM structures so every click was attributable before a dollar of spend was committed.',
       },
       {
         label: 'The Creative Strategy',
-        text: 'I wrote the creative briefs balancing an anti-corporate visual identity with authoritative framing for public-sector buyers — the audience that buys on credibility, not brand.',
+        text: 'I wrote the creative briefs balancing an anti-corporate visual identity with authoritative framing for public-sector buyers. These are people who buy on credibility, not brand.',
       },
       {
         label: 'The Regulatory Pivot',
-        text: 'Mid-build, the DOJ issued an Interim Final Rule extending the ADA Title II deadline. Rather than halt the campaign, I executed a surgical copy pivot — shifting from compliance fear to deadline-aware angles like "The DOJ delayed it. The lawsuits did not." Audience targeting, budget, and tracking architecture remained untouched.',
+        text: 'Mid-build, the DOJ issued an Interim Final Rule extending the ADA Title II deadline. Rather than halt the campaign, I executed a surgical copy pivot, shifting from compliance fear to deadline-aware angles like "The DOJ delayed it. The lawsuits did not." Audience targeting, budget, and tracking architecture remained untouched.',
       },
       {
         label: 'The Result',
-        text: 'A technically sound validation engine that tested the riskiest assumption — CTR on the Index hook — at minimum cost, protecting the team from wasting build hours on a heavy 25-ad-set ABM structure before the core message was proven.',
+        text: 'A technically sound validation engine that tested the riskiest assumption, CTR on the Index hook, at minimum cost. It protected the team from wasting build hours on a heavy 25-ad-set ABM structure before the core message was proven.',
       },
     ],
   },
@@ -152,19 +152,19 @@ const CASES = [
     badge: 'In Progress',
     title: 'GHL Pipeline Orchestration',
     stack: 'Regional Life Insurance Agency · Go High Level · CRM Automation',
-    snippet: 'Rebuilding a fragmented life insurance tech stack into a unified GHL environment — engineering automated sequences to trigger the moment a lead enters the system.',
+    snippet: 'Rebuilding a fragmented life insurance tech stack into a unified GHL environment, engineering automated sequences to trigger the moment a lead enters the system.',
     sections: [
       {
         label: 'The Challenge',
-        text: 'In the life insurance sector, speed-to-lead is the single biggest predictor of a closed policy. A regional agency was operating on a fragmented tech stack causing lead decay — manual triage, delayed follow-up, and no unified view of prospect activity across channels.',
+        text: 'In the life insurance sector, speed-to-lead is the single biggest predictor of a closed policy. A regional agency was operating on a fragmented tech stack causing lead decay: manual triage, delayed follow-up, and no unified view of prospect activity across channels.',
       },
       {
         label: 'The Blueprint',
-        text: 'Migrating their entire lead management and sales architecture into Go High Level — not porting old data, but rebuilding funnel logic from the ground up. Using Claude Code to script custom webhooks, API integrations, and backend logic. Engineering automated SMS and email sequences to trigger the second a lead hits the system, with conditional routing to send high-value policy inquiries directly to sales.',
+        text: 'Migrating their entire lead management and sales architecture into Go High Level, not porting old data, but rebuilding funnel logic from the ground up. Using Claude Code to script custom webhooks, API integrations, and backend logic. Engineering automated SMS and email sequences to trigger the second a lead hits the system, with conditional routing to send high-value policy inquiries directly to sales.',
       },
       {
         label: 'The Objective',
-        text: 'A unified, fully automated GHL architecture that eliminates manual lead triage — guaranteeing immediate engagement with every prospect and setting the foundation for scalable, tracked experimentation.',
+        text: 'A unified, fully automated GHL architecture that eliminates manual lead triage, guaranteeing immediate engagement with every prospect and setting the foundation for scalable, tracked experimentation.',
       },
     ],
   },

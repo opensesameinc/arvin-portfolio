@@ -148,7 +148,7 @@ export default function Contact() {
             <p className="text-emerald-400 text-xs font-semibold uppercase tracking-widest mb-2">Stay in the loop</p>
             <h2 className="text-white font-bold text-lg mb-1">Get updates from Arvin</h2>
             <p className="text-zinc-500 text-sm mb-6 leading-relaxed">
-              MarTech insights, case studies, and growth frameworks — straight to your inbox.
+              MarTech insights, case studies, and growth frameworks. Straight to your inbox.
             </p>
 
             {status === 'success' ? (

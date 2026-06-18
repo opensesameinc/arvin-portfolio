@@ -34,7 +34,7 @@ const ROLES = [
     dot: 'emerald',
     bullets: [
       'Designed and operationalized a 100-point B2B lead scoring model across HubSpot and Salesforce, guiding architectural direction for MarTech integrations and enterprise data governance.',
-      'Analyzed 12 months of historical data to calibrate system scoring — proving 94% of conversions were single-touch events, reducing redundancy and simplifying fragmented lead routing logic.',
+      'Analyzed 12 months of historical data to calibrate system scoring, proving 94% of conversions were single-touch events. Cut redundancy and simplified fragmented lead routing logic.',
       'Audited Google Tag Manager environments, identifying 11 orphaned conversion tags, and authored an 11-task developer specification to remediate tracking across international corporate entities.',
       'Migrated a 25-campaign Google Ads architecture from a UK entity to a US entity while maintaining shared GTM and GA4 properties.',
     ],
@@ -138,7 +138,7 @@ const ROLES = [
     dates: '1989 – 1999',
     dot: 'gray',
     bullets: [
-      'Served during Desert Storm — Honorable Discharge.',
+      'Served during Desert Storm. Honorable Discharge.',
       'Applied strict operational governance and logistics management to high-stakes delivery environments.',
     ],
   },
@@ -214,7 +214,7 @@ export default function Career() {
           </h1>
           <p className="text-zinc-400 text-base leading-relaxed max-w-2xl">
             Technical leader combining a foundation in enterprise systems engineering with deep expertise
-            in marketing technology and customer engagement platforms. From IBM to B2B SaaS — I map
+            in marketing technology and customer engagement platforms. From IBM to B2B SaaS. I map
             business strategy to architecture.
           </p>
         </div>
@@ -231,7 +231,7 @@ export default function Career() {
           <p className="text-emerald-400 text-xs font-semibold uppercase tracking-widest mb-2">Open to</p>
           <p className="text-zinc-300 text-sm leading-relaxed">
             Marketing Director or Head of Growth roles at B2B SaaS companies where data-driven acquisition
-            and CRM infrastructure are core to the growth thesis. Based in Austin, TX — open to remote.
+            and CRM infrastructure are core to the growth thesis. Based in Austin, TX. Open to remote.
           </p>
         </div>
 

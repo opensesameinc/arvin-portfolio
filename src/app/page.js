@@ -335,7 +335,7 @@ export default function Home() {
                   <h2 className="text-2xl font-bold text-white mb-2">Build & Launch Your Site with AI</h2>
                   <p className="text-zinc-400 text-sm leading-relaxed max-w-lg">
                     Get the step-by-step guide to building and deploying your own website using
-                    Claude Code, VS Code, GitHub, and Vercel — no coding experience needed.
+                    Claude Code, VS Code, GitHub, and Vercel. No coding experience needed.
                     Plus MarTech insights and growth frameworks straight to your inbox.
                   </p>
                 </div>
