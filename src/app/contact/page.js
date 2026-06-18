@@ -107,10 +107,6 @@ export default function Contact() {
           <h1 className="text-4xl md:text-5xl font-bold text-white tracking-tight leading-tight mb-3" style={{ fontFamily: 'var(--font-space-mono)' }}>
             Let's connect.
           </h1>
-          <div className="inline-flex items-center gap-2">
-            <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-zinc-500 text-sm">Open to Marketing Director & Head of Growth roles</span>
-          </div>
         </div>
 
         {/* Social links */}
